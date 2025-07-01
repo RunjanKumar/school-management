@@ -105,7 +105,7 @@ async function forgotAdminPassword(payload: any) {
 		Constants.EMAIL_TYPES.FORGOT_PASSWORD
 	);
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.FORGOT_PASSWORD_MAIL_SENT_SUCCESSFUL);
+	return createSuccessResponse(Constants.RESPONSE_MESSAGES.FORGOT_PASSWORD_MAIL_SENT);
 }
 
 /**
@@ -120,7 +120,7 @@ async function resetAdminPassword(payload: any) {
 
 	await dbService.deleteOne(sessionModel, { token: payload.authToken });
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.PASSWORD_RESET_SUCCESSFUL);
+	return createSuccessResponse(Constants.RESPONSE_MESSAGES.PASSWORD_RESET);
 }
 
 export const adminController = {

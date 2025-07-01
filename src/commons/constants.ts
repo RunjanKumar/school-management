@@ -10,31 +10,17 @@ const RESPONSE_MESSAGES = {
 	LOGIN_SUCCESSFUL: 'You have logged in successfully.',
 	LOGOUT_SUCCESSFUL: 'You have logged out successfully.',
 	INTERNAL_SERVER_ERROR: 'An unexpected error occurred. Please try again later.',
-	FORGOT_PASSWORD_MAIL_SENT_SUCCESSFUL: 'Forgot password mail sent successfully.',
-	PASSWORD_RESET_SUCCESSFUL: 'Password reset successfully.',
+	FORGOT_PASSWORD_MAIL_SENT: 'Forgot password mail sent successfully.',
+	PASSWORD_RESET: 'Password reset successfully.',
 	PASSWORD_VALIDATION_FAILED: 'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character and be at least 8 characters long.',
 	FILE_UPLOAD_TYPE_ERROR: 'Invalid file type. Please upload a valid file.',
 	TOO_MANY_REQUESTS: 'Too many requests. Please try again later.',
 	EMAIL_ALREADY_IN_USE: 'Email already in use.',
-	USER_CREATED_SUCCESSFULLY: 'User created successfully.',
-	USERS_FETCHED_SUCCESSFULLY: 'Users fetched successfully.',
-	DASHBOARD_DATA_FETCHED: 'Dashboard data fetched successfully.',
-	USER_UPDATED_SUCCESSFULLY: 'User updated successfully.',
-	USER_DELETED_SUCCESSFULLY: 'User deleted successfully.',
-	USERS_DELETED_SUCCESSFULLY: 'Users deleted successfully.',
-	USER_NOT_FOUND: 'User not found.',
-	USERS_NOT_FOUND: 'Users not found.',
-	PAYMENT_METHOD_CREATED_SUCCESSFULLY: 'Payment method created successfully.',
-	PAYMENT_METHODS_FETCHED_SUCCESSFULLY: 'Payment methods fetched successfully.',
-	PAYMENT_METHOD_FETCHED_SUCCESSFULLY: 'Payment method fetched successfully.',
-	PAYMENT_METHOD_UPDATED_SUCCESSFULLY: 'Payment method updated successfully.',
-	PAYMENT_METHOD_DELETED_SUCCESSFULLY: 'Payment method deleted successfully.',
-	PAYMENT_METHODS_DELETED_SUCCESSFULLY: 'Payment methods deleted successfully.',
-	PAYMENT_METHOD_NOT_FOUND: 'Payment method not found.',
-	PAYMENT_METHODS_NOT_FOUND: 'Payment methods not found.',
-	LOGIN_TRACKING_FETCHED_SUCCESSFULLY: 'Login tracking fetched successfully.',
-	SUBSCRIPTION_FETCHED_SUCCESSFULLY: 'Subscription fetched successfully.',
-	SUBSCRIPTION_NOT_FOUND: 'Subscription not found.'
+	SCHOOL_OWNER_CREATED: 'School owner created successfully.',
+	SCHOOL_OWNER_NOT_FOUND: 'School owner not found.',
+	SCHOOL_OWNER_EMAIL_ALREADY_EXISTS: 'School owner email already exists.',
+	SCHOOL_OWNER_CONTACT_NUMBER_ALREADY_EXISTS: 'School owner contact number already exists.',
+	PHONE_NUMBER_VALIDATION_FAILED: 'Phone number is not valid.'
 };
 
 const ERROR_TYPES = {
@@ -98,7 +84,8 @@ const SPECIAL_CHARACTERS = [ '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', '
 
 const REGEX = {
 	PASSWORD: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[ !"#$%&'()*+,/:;<=>?@[\]^_`{|}~÷°¬±µ‰¤ƒ¥€£¢ß¿¡©®™§†‡—¶])(?=.{8,})/,
-	TIME: /^([01]\d|2[0-3]):([0-5]\d)$/
+	TIME: /^([01]\d|2[0-3]):([0-5]\d)$/,
+	PHONE_NUMBER: /^[0-9]{10}$/
 };
 
 const USER_TYPE = {
