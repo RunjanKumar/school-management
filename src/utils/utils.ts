@@ -169,39 +169,33 @@ const capitalizeFirstLetter = (str: string) => {
  */
 const generateRandomPassword = (): string => {
 	const length = 12; // Fixed length (must be >= 8)
-  
+
 	const lowercase = 'abcdefghijklmnopqrstuvwxyz';
 	const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	const digits = '0123456789';
 	const special = '!@#$%^&*()_+-=[]{}|;:,.<>?';
-  
+
 	const allChars = lowercase + uppercase + digits + special;
-  
-	const getRandomChar = (str: string): string =>
-	  str[Math.floor(Math.random() * str.length)];
-  
+
+	const getRandomChar = (str: string): string => str[Math.floor(Math.random() * str.length)];
+
 	// Ensure at least one of each required character type
-	const required: string[] = [
-	  getRandomChar(lowercase),
-	  getRandomChar(uppercase),
-	  getRandomChar(digits),
-	  getRandomChar(special),
-	];
-  
+	const required: string[] = [ getRandomChar(lowercase), getRandomChar(uppercase), getRandomChar(digits), getRandomChar(special) ];
+
 	// Fill the rest of the password with random characters
 	const remainingLength = length - required.length;
 	const remaining: string[] = Array.from({ length: remainingLength }, () => getRandomChar(allChars));
-  
-	const passwordArray = [...required, ...remaining];
-  
+
+	const passwordArray = [ ...required, ...remaining ];
+
 	// Shuffle the array (Fisher-Yates)
 	for (let i = passwordArray.length - 1; i > 0; i--) {
-	  const j = Math.floor(Math.random() * (i + 1));
-	  [passwordArray[i], passwordArray[j]] = [passwordArray[j], passwordArray[i]];
+		const j = Math.floor(Math.random() * (i + 1));
+		[ passwordArray[i], passwordArray[j] ] = [ passwordArray[j], passwordArray[i] ];
 	}
-  
+
 	return passwordArray.join('');
-  };
+};
 
 export const Utils = {
 	parseTemplate,

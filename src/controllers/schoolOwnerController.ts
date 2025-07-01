@@ -20,7 +20,7 @@ async function createSchoolOwner(payload: any) {
 		throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_CONTACT_NUMBER_ALREADY_EXISTS, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
-    const schoolOwnerPassword = Utils.generateRandomPassword();
+	const schoolOwnerPassword = Utils.generateRandomPassword();
 
 	const schoolOwner = await dbService.create(schoolOwnerModel, {
 		name: payload.name,
