@@ -152,6 +152,20 @@ const routes: any = [
 		},
 		auth: Constants.AVAILABLE_AUTHS.SCHOOL_OWNER,
 		handler: schoolOwnerController.updateAccountDetails
+	},
+	{
+		method: 'GET',
+		path: '/v1/schoolOwner/getProfile',
+		joiSchemaForSwagger: {
+			headers: {
+				authorization: Joi.string().required().description('School owner\'s JWT token')
+			},
+			group: 'School Owner',
+			description: 'API to get profile details of a school owner.',
+			model: 'GetProfile'
+		},
+		auth: Constants.AVAILABLE_AUTHS.SCHOOL_OWNER,
+		handler: schoolOwnerController.getProfile
 	}
 ];
 

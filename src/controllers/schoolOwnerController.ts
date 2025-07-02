@@ -217,6 +217,18 @@ async function updateAccountDetails(payload: any) {
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.ACCOUNT_DETAILS_UPDATED);
 }
 
+async function getProfile(payload: any) {
+	return createSuccessResponse(Constants.RESPONSE_MESSAGES.PROFILE_DETAILS_FETCHED, {
+		schoolOwner: {
+			_id: payload.schoolOwner._id,
+			name: payload.schoolOwner.name,
+			email: payload.schoolOwner.email,
+			contactNumber: payload.schoolOwner.contactNumber,
+			alternateContactNumber: payload.schoolOwner.alternateContactNumber
+		}
+	});
+}
+
 export const schoolOwnerController = {
 	createSchoolOwner,
 	updateSchoolOwner,
@@ -225,5 +237,6 @@ export const schoolOwnerController = {
 	deleteSchoolOwners,
 	loginSchoolOwner,
 	changePassword,
-	updateAccountDetails
+	updateAccountDetails,
+	getProfile
 };
