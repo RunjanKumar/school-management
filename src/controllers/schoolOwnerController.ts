@@ -142,6 +142,21 @@ async function fetchSchoolOwnerDetails(payload: any) {
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_DETAILS_FETCHED, { schoolOwner });
 }
 
+async function deleteSchoolOwners(payload: any) {
+	const existingSchoolOwners = await dbService.count(schoolOwnerModel, {
+		_id: { $in: payload.schoolOwnerIds },
+		isDeleted: false
+	});
+
+	if (existingSchoolOwners !== payload.schoolOwnerIds.length) {
+		throw createErrorResponse(payload.schoolOwnerIds.length === 1 ? Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_NOT_FOUND : Constants.RESPONSE_MESSAGES.SCHOOL_OWNERS_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+	}
+
+	await dbService.updateMany(schoolOwnerModel, { _id: { $in: payload.schoolOwnerIds } }, { $set: { isDeleted: true } });
+
+	return createSuccessResponse(payload.schoolOwnerIds.length === 1 ? Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_DELETED : Constants.RESPONSE_MESSAGES.SCHOOL_OWNERS_DELETED);
+}
+
 async function loginSchoolOwner(payload: any) {
 	const schoolOwner = await dbService.findOne(schoolOwnerModel, {
 		email: payload.email,
@@ -179,5 +194,6 @@ export const schoolOwnerController = {
 	updateSchoolOwner,
 	listSchoolOwners,
 	fetchSchoolOwnerDetails,
+	deleteSchoolOwners,
 	loginSchoolOwner
 };

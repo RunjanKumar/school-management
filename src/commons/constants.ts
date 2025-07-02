@@ -23,7 +23,10 @@ const RESPONSE_MESSAGES = {
 	PHONE_NUMBER_VALIDATION_FAILED: '{{#label}} is not a valid phone number.',
 	SCHOOL_OWNERS_LISTED: 'School owners listed successfully.',
 	SCHOOL_OWNER_DETAILS_FETCHED: 'School owner details fetched successfully.',
-	SCHOOL_OWNER_UPDATED: 'School owner updated successfully.'
+	SCHOOL_OWNER_UPDATED: 'School owner updated successfully.',
+	SCHOOL_OWNER_DELETED: 'School owner deleted successfully.',
+	SCHOOL_OWNERS_DELETED: 'School owners deleted successfully.',
+	SCHOOL_OWNERS_NOT_FOUND: 'School owners not found.'
 };
 
 const ERROR_TYPES = {
