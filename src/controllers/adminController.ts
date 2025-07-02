@@ -8,11 +8,13 @@ import { sendEmail } from '../utils/commonFunctions';
 import config from '../config';
 
 /**
- * Login admin
- * @param {Object} payload - Request Payload
- * @param {string} payload.email - email of the admin
- * @param {string} payload.password - password of the admin
- * @returns {Object} - token and admin data
+ * Authenticates an admin and creates a login session
+ * @param {Object} payload - Request payload containing login credentials
+ * @param {string} payload.email - Email address of the admin
+ * @param {string} payload.password - Password of the admin
+ * @returns {Object} Success response with authentication token
+ * @returns {string} returns.token - JWT token for authentication
+ * @throws {Object} Error response if invalid credentials or admin not found
  */
 async function loginAdmin(payload: any) {
 	// fetch admin
@@ -46,10 +48,15 @@ async function loginAdmin(payload: any) {
 }
 
 /**
- * Get admin profile
- * @param {Object} payload - Request Payload
- * @param {Object} payload.admin - Admin data
- * @returns {Object} - Success message and admin data
+ * Retrieves the profile information of the authenticated admin
+ * @param {Object} payload - Request payload containing admin data
+ * @param {Object} payload.admin - Admin object containing profile information
+ * @param {string} payload.admin._id - ID of the admin
+ * @param {string} payload.admin.name - Name of the admin
+ * @param {string} payload.admin.email - Email address of the admin
+ * @returns {Object} Success response with admin profile data
+ * @returns {Object} returns.admin - Admin profile object
+ * @throws {Object} Error response if profile retrieval fails
  */
 async function getAdminProfile(payload: any) {
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.ADMIN_PROFILE_FETCHED, {
@@ -62,10 +69,13 @@ async function getAdminProfile(payload: any) {
 }
 
 /**
- * Logout admin
- * @param {Object} payload - Request Payload
- * @param {Object} payload.admin - Admin data
- * @returns {Object} - Success message
+ * Logs out an admin by invalidating their session token
+ * @param {Object} payload - Request payload containing authentication details
+ * @param {Object} payload.admin - Admin object containing _id
+ * @param {string} payload.admin._id - ID of the admin
+ * @param {string} payload.authToken - Authentication token to invalidate
+ * @returns {Object} Success response indicating logout was successful
+ * @throws {Object} Error response if logout fails
  */
 async function logoutAdmin(payload: any) {
 	await dbService.deleteOne(sessionModel, { token: payload.authToken });
@@ -74,10 +84,11 @@ async function logoutAdmin(payload: any) {
 }
 
 /**
- * Forgot admin password
- * @param {Object} payload - Request Payload
- * @param {string} payload.email - email of the admin
- * @returns {Object} - Success message
+ * Initiates the forgot password process by sending a reset email
+ * @param {Object} payload - Request payload containing admin email
+ * @param {string} payload.email - Email address of the admin requesting password reset
+ * @returns {Object} Success response indicating reset email was sent
+ * @throws {Object} Error response if admin not found or email sending fails
  */
 async function forgotAdminPassword(payload: any) {
 	const admin: AdminInterface | null = await dbService.findOne(adminModel, { email: payload.email });
@@ -109,11 +120,14 @@ async function forgotAdminPassword(payload: any) {
 }
 
 /**
- * Reset admin password
- * @param {Object} payload - Request Payload
- * @param {Object} payload.admin - Admin data
- * @param {string} payload.password - New password of the admin
- * @returns {Object} - Success message
+ * Resets the admin password using a valid reset token
+ * @param {Object} payload - Request payload containing password reset details
+ * @param {Object} payload.admin - Admin object containing _id
+ * @param {string} payload.admin._id - ID of the admin
+ * @param {string} payload.password - New password to set (plain text)
+ * @param {string} payload.authToken - Authentication token to invalidate after reset
+ * @returns {Object} Success response indicating password was reset
+ * @throws {Object} Error response if password reset fails
  */
 async function resetAdminPassword(payload: any) {
 	await dbService.updateOne(adminModel, { _id: payload.admin._id }, { password: await Utils.hashPassword(payload.password) });

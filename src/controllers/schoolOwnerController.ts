@@ -4,6 +4,17 @@ import { schoolOwnerModel, sessionModel } from '../models';
 import { Constants } from '../commons/constants';
 import { Utils } from '../utils/utils';
 
+/**
+ * Creates a new school owner in the system
+ * @param {Object} payload - Request payload containing school owner details
+ * @param {string} payload.name - Full name of the school owner
+ * @param {string} payload.email - Email address of the school owner (must be unique)
+ * @param {string} payload.contactNumber - Primary contact number of the school owner (must be unique)
+ * @param {string} [payload.alternateContactNumber] - Alternate contact number of the school owner (optional, must be unique)
+ * @param {boolean} [payload.isEnabled] - Whether the school owner account is enabled (optional, defaults to true)
+ * @returns {Object} Success response with created school owner data
+ * @throws {Object} Error response if email or contact number already exists
+ */
 async function createSchoolOwner(payload: any) {
 	// check that both email and phoine number are unique
 	const schoolOwnerWithDuplicateEmail = await dbService.findOne(schoolOwnerModel, {
@@ -34,6 +45,18 @@ async function createSchoolOwner(payload: any) {
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_CREATED, { schoolOwner });
 }
 
+/**
+ * Updates an existing school owner's information
+ * @param {Object} payload - Request payload containing school owner update details
+ * @param {string} payload.schoolOwnerId - ID of the school owner to update
+ * @param {string} [payload.name] - Updated name of the school owner (optional)
+ * @param {string} [payload.email] - Updated email address of the school owner (optional, must be unique)
+ * @param {string} [payload.contactNumber] - Updated primary contact number (optional, must be unique)
+ * @param {string} [payload.alternateContactNumber] - Updated alternate contact number (optional, must be unique)
+ * @param {boolean} [payload.isEnabled] - Updated enabled status (optional)
+ * @returns {Object} Success response indicating school owner was updated
+ * @throws {Object} Error response if school owner not found or duplicate email/contact number
+ */
 async function updateSchoolOwner(payload: any) {
 	const schoolOwner = await dbService.findOne(schoolOwnerModel, { _id: payload.schoolOwnerId });
 
@@ -82,6 +105,19 @@ async function updateSchoolOwner(payload: any) {
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_UPDATED);
 }
 
+/**
+ * Retrieves a list of school owners with pagination and search functionality
+ * @param {Object} payload - Request payload containing search and pagination parameters
+ * @param {string} [payload.searchString] - Search string to filter school owners by name, email, or contact number (optional)
+ * @param {string} payload.sortKey - Field name to sort by
+ * @param {number} payload.sortDirection - Sort direction (1 for ascending, -1 for descending)
+ * @param {number} payload.skip - Number of records to skip for pagination
+ * @param {number} payload.limit - Maximum number of records to return
+ * @returns {Object} Success response with school owners data and count
+ * @returns {Array} returns.data - Array of school owner objects (limited fields)
+ * @returns {number} returns.count - Total count of school owners matching criteria
+ * @throws {Object} Error response if school owners retrieval fails
+ */
 async function listSchoolOwners(payload: any) {
 	const matchCriteria: Record<string, boolean | Record<string, Record<string, string>>[]> = { isDeleted: false };
 
@@ -120,6 +156,14 @@ async function listSchoolOwners(payload: any) {
 	});
 }
 
+/**
+ * Fetches detailed information of a specific school owner
+ * @param {Object} payload - Request payload containing school owner ID
+ * @param {string} payload.schoolOwnerId - ID of the school owner to fetch details for
+ * @returns {Object} Success response with school owner details
+ * @returns {Object} returns.schoolOwner - School owner object with detailed information
+ * @throws {Object} Error response if school owner not found
+ */
 async function fetchSchoolOwnerDetails(payload: any) {
 	const schoolOwner = await dbService.findOne(
 		schoolOwnerModel,
@@ -142,6 +186,13 @@ async function fetchSchoolOwnerDetails(payload: any) {
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_DETAILS_FETCHED, { schoolOwner });
 }
 
+/**
+ * Soft deletes one or more school owners by setting isDeleted flag to true
+ * @param {Object} payload - Request payload containing school owner deletion details
+ * @param {Array<string>} payload.schoolOwnerIds - Array of school owner IDs to delete
+ * @returns {Object} Success response indicating school owners were deleted
+ * @throws {Object} Error response if school owners not found or deletion fails
+ */
 async function deleteSchoolOwners(payload: any) {
 	const existingSchoolOwners = await dbService.count(schoolOwnerModel, {
 		_id: { $in: payload.schoolOwnerIds },
@@ -157,6 +208,15 @@ async function deleteSchoolOwners(payload: any) {
 	return createSuccessResponse(payload.schoolOwnerIds.length === 1 ? Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_DELETED : Constants.RESPONSE_MESSAGES.SCHOOL_OWNERS_DELETED);
 }
 
+/**
+ * Authenticates a school owner and creates a login session
+ * @param {Object} payload - Request payload containing login credentials
+ * @param {string} payload.email - Email address of the school owner
+ * @param {string} payload.password - Password of the school owner
+ * @returns {Object} Success response with authentication token
+ * @returns {string} returns.token - JWT token for authentication
+ * @throws {Object} Error response if invalid credentials or account disabled
+ */
 async function loginSchoolOwner(payload: any) {
 	const schoolOwner = await dbService.findOne(schoolOwnerModel, {
 		email: payload.email,
@@ -189,6 +249,17 @@ async function loginSchoolOwner(payload: any) {
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.LOGIN_SUCCESSFUL, { token: token.token });
 }
 
+/**
+ * Changes the password for a school owner account
+ * @param {Object} payload - Request payload containing password change details
+ * @param {Object} payload.schoolOwner - School owner object containing _id and password
+ * @param {string} payload.schoolOwner._id - ID of the school owner
+ * @param {string} payload.schoolOwner.password - Current hashed password
+ * @param {string} payload.password - Current password (plain text)
+ * @param {string} payload.newPassword - New password to set (plain text)
+ * @returns {Object} Success response indicating password was changed
+ * @throws {Object} Error response if current password is incorrect
+ */
 async function changePassword(payload: any) {
 	// check if current password is correct
 	const isPasswordValid = await Utils.comparePassword(payload.password, payload.schoolOwner.password);
@@ -211,12 +282,34 @@ async function changePassword(payload: any) {
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.PASSWORD_CHANGED);
 }
 
+/**
+ * Updates the account details (name) of a school owner
+ * @param {Object} payload - Request payload containing account update details
+ * @param {Object} payload.schoolOwner - School owner object containing _id
+ * @param {string} payload.schoolOwner._id - ID of the school owner
+ * @param {string} payload.name - Updated name of the school owner
+ * @returns {Object} Success response indicating account details were updated
+ * @throws {Object} Error response if account update fails
+ */
 async function updateAccountDetails(payload: any) {
 	await dbService.updateOne(schoolOwnerModel, { _id: payload.schoolOwner._id }, { $set: { name: payload.name } });
 
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.ACCOUNT_DETAILS_UPDATED);
 }
 
+/**
+ * Retrieves the profile information of the authenticated school owner
+ * @param {Object} payload - Request payload containing school owner data
+ * @param {Object} payload.schoolOwner - School owner object containing profile information
+ * @param {string} payload.schoolOwner._id - ID of the school owner
+ * @param {string} payload.schoolOwner.name - Name of the school owner
+ * @param {string} payload.schoolOwner.email - Email address of the school owner
+ * @param {string} payload.schoolOwner.contactNumber - Contact number of the school owner
+ * @param {string} [payload.schoolOwner.alternateContactNumber] - Alternate contact number of the school owner
+ * @returns {Object} Success response with school owner profile data
+ * @returns {Object} returns.schoolOwner - School owner profile object
+ * @throws {Object} Error response if profile retrieval fails
+ */
 async function getProfile(payload: any) {
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.PROFILE_DETAILS_FETCHED, {
 		schoolOwner: {
