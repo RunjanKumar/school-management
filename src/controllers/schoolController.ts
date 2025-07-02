@@ -65,5 +65,6 @@ async function deleteSchools(payload: any) {
 
 export const schoolController = {
 	createSchool,
-	getSchools
+	getSchools,
+	deleteSchools
 };

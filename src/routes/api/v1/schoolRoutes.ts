@@ -52,6 +52,23 @@ const routes: any = [
 		},
 		auth: Constants.AVAILABLE_AUTHS.SCHOOL_OWNER,
 		handler: schoolController.getSchools
+	},
+	{
+		method: 'DELETE',
+		path: '/v1/school',
+		joiSchemaForSwagger: {
+			headers: {
+				authorization: Joi.string().required().description('School owner\'s JWT token')
+			},
+			body: {
+				schoolIds: Joi.array().items(Joi.string().mongoId()).required().description('School IDs')
+			},
+			group: 'School',
+			description: 'API to delete schools.',
+			model: 'DeleteSchools'
+		},
+		auth: Constants.AVAILABLE_AUTHS.SCHOOL_OWNER,
+		handler: schoolController.deleteSchools
 	}
 ];
 
