@@ -224,5 +224,6 @@ export const schoolOwnerController = {
 	fetchSchoolOwnerDetails,
 	deleteSchoolOwners,
 	loginSchoolOwner,
-	changePassword
+	changePassword,
+	updateAccountDetails
 };
