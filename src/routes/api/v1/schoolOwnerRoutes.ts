@@ -10,7 +10,7 @@ const routes: any = [
 		path: '/v1/schoolOwner',
 		joiSchemaForSwagger: {
 			headers: {
-				authorization: Joi.string().required().description('School owner\'s JWT token')
+				authorization: Joi.string().required().description('Admin\'s JWT token')
 			},
 			body: {
 				name: Joi.string().required().description('Name of the school owner'),
