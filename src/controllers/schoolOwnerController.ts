@@ -33,8 +33,72 @@ async function createSchoolOwner(payload: any) {
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_CREATED, { schoolOwner });
 }
 
+async function listSchoolOwners(payload: any) {
+	const matchCriteria: Record<string, boolean | Record<string, Record<string, string>>[]> = { isDeleted: false };
+
+	if (payload.searchString) {
+		matchCriteria.$or = [ { name: { $regex: payload.searchString, $options: 'i' } }, { email: { $regex: payload.searchString, $options: 'i' } }, { contactNumber: { $regex: payload.searchString, $options: 'i' } } ];
+	}
+
+	const schoolOwners = await dbService.aggregate(schoolOwnerModel, [
+		{ $match: matchCriteria },
+		{
+			$facet: {
+				data: [
+					{ $sort: { [payload.sortKey]: payload.sortDirection } },
+					{ $skip: payload.skip },
+					{ $limit: payload.limit },
+					{
+						$project: {
+							_id: 1,
+							name: 1,
+							email: 1,
+							contactNumber: 1,
+							isEnabled: 1,
+							createdAt: 1
+						}
+					}
+				],
+				count: [ { $count: 'count' } ]
+			}
+		},
+		{ $addFields: { count: { $ifNull: [ { $first: '$count.count' }, 0 ] } } }
+	]);
+
+	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNERS_LISTED, {
+		data: schoolOwners[0]?.data ?? [],
+		count: schoolOwners[0]?.count ?? 0
+	});
+}
+
+async function fetchSchoolOwnerDetails(payload: any) {
+	const schoolOwner = await dbService.findOne(
+		schoolOwnerModel,
+		{ _id: payload.schoolOwnerId },
+		{
+			_id: 1,
+			name: 1,
+			email: 1,
+			contactNumber: 1,
+			alternateContactNumber: 1,
+			createdAt: 1,
+			isEnabled: 1
+		}
+	);
+
+	if (!schoolOwner) {
+		throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+	}
+
+	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_DETAILS_FETCHED, { schoolOwner });
+}
+
 async function loginSchoolOwner(payload: any) {
-	const schoolOwner = await dbService.findOne(schoolOwnerModel, { email: payload.email });
+	const schoolOwner = await dbService.findOne(schoolOwnerModel, {
+		email: payload.email,
+		isEnabled: true,
+		isDeleted: false
+	});
 
 	if (!schoolOwner) {
 		throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
@@ -63,5 +127,7 @@ async function loginSchoolOwner(payload: any) {
 
 export const schoolOwnerController = {
 	createSchoolOwner,
+	listSchoolOwners,
+	fetchSchoolOwnerDetails,
 	loginSchoolOwner
 };

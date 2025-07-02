@@ -28,6 +28,10 @@ const schoolOwnerSchema: Schema<SchoolOwnerInterface> = new Schema(
 			type: Boolean,
 			default: false
 		},
+		isEnabled: {
+			type: Boolean,
+			default: true
+		},
 		isDeleted: {
 			type: Boolean,
 			default: false

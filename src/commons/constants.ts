@@ -20,7 +20,9 @@ const RESPONSE_MESSAGES = {
 	SCHOOL_OWNER_NOT_FOUND: 'School owner not found.',
 	SCHOOL_OWNER_EMAIL_ALREADY_EXISTS: 'School owner email already exists.',
 	SCHOOL_OWNER_CONTACT_NUMBER_ALREADY_EXISTS: 'School owner contact number already exists.',
-	PHONE_NUMBER_VALIDATION_FAILED: 'Phone number is not valid.'
+	PHONE_NUMBER_VALIDATION_FAILED: 'Phone number is not valid.',
+	SCHOOL_OWNERS_LISTED: 'School owners listed successfully.',
+	SCHOOL_OWNER_DETAILS_FETCHED: 'School owner details fetched successfully.'
 };
 
 const ERROR_TYPES = {

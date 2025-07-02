@@ -22,7 +22,46 @@ const routes: any = [
 			description: 'API to create a school owner.',
 			model: 'CreateSchoolOwner'
 		},
+		auth: Constants.AVAILABLE_AUTHS.ADMIN,
 		handler: schoolOwnerController.createSchoolOwner
+	},
+	{
+		method: 'GET',
+		path: '/v1/schoolOwner',
+		joiSchemaForSwagger: {
+			headers: {
+				authorization: Joi.string().required().description('Admin\'s JWT token')
+			},
+			query: {
+				skip: Joi.number().min(0).default(0).description('Skip'),
+				limit: Joi.number().min(1).default(10).description('Limit'),
+				sortKey: Joi.string().valid('name', 'email', 'contactNumber', 'isEnabled', 'createdAt').default('createdAt').description('Sort key'),
+				sortDirection: Joi.number().optional().valid(1, -1).default(-1).description('Sort direction'),
+				searchString: Joi.string().optional().description('Search string; applies to name, email and contact number')
+			},
+			group: 'School Owner',
+			description: 'API to list school owners.',
+			model: 'ListSchoolOwners'
+		},
+		auth: Constants.AVAILABLE_AUTHS.ADMIN,
+		handler: schoolOwnerController.listSchoolOwners
+	},
+	{
+		method: 'GET',
+		path: '/v1/schoolOwner/details',
+		joiSchemaForSwagger: {
+			headers: {
+				authorization: Joi.string().required().description('Admin\'s JWT token')
+			},
+			query: {
+				schoolOwnerId: Joi.string().required().description('School owner ID')
+			},
+			group: 'School Owner',
+			description: 'API to fetch school owner details.',
+			model: 'FetchSchoolOwnerDetails'
+		},
+		auth: Constants.AVAILABLE_AUTHS.ADMIN,
+		handler: schoolOwnerController.fetchSchoolOwnerDetails
 	},
 	{
 		method: 'POST',
