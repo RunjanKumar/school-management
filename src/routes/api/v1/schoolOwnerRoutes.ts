@@ -16,7 +16,8 @@ const routes: any = [
 				name: Joi.string().required().description('Name of the school owner'),
 				email: Joi.string().email().lowercase().required().description('Email of the school owner'),
 				contactNumber: Joi.string().phoneNumber().required().description('Contact number of the school owner'),
-				alternateContactNumber: Joi.string().phoneNumber().optional().description('Alternate contact number of the school owner')
+				alternateContactNumber: Joi.string().phoneNumber().optional().description('Alternate contact number of the school owner'),
+				isEnabled: Joi.boolean().optional().description('Enable/disable school owner')
 			},
 			group: 'School Owner',
 			description: 'API to create a school owner.',
@@ -24,6 +25,28 @@ const routes: any = [
 		},
 		auth: Constants.AVAILABLE_AUTHS.ADMIN,
 		handler: schoolOwnerController.createSchoolOwner
+	},
+	{
+		method: 'PUT',
+		path: '/v1/schoolOwner',
+		joiSchemaForSwagger: {
+			headers: {
+				authorization: Joi.string().required().description('Admin\'s JWT token')
+			},
+			body: {
+				schoolOwnerId: Joi.string().required().description('School owner ID'),
+				name: Joi.string().optional().description('Name of the school owner'),
+				email: Joi.string().email().lowercase().optional().description('Email of the school owner'),
+				contactNumber: Joi.string().phoneNumber().optional().description('Contact number of the school owner'),
+				alternateContactNumber: Joi.string().phoneNumber().optional().description('Alternate contact number of the school owner'),
+				isEnabled: Joi.boolean().optional().description('Enable/disable school owner')
+			},
+			group: 'School Owner',
+			description: 'API to update a school owner.',
+			model: 'UpdateSchoolOwner'
+		},
+		auth: Constants.AVAILABLE_AUTHS.ADMIN,
+		handler: schoolOwnerController.updateSchoolOwner
 	},
 	{
 		method: 'GET',

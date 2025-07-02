@@ -27,10 +27,59 @@ async function createSchoolOwner(payload: any) {
 		email: payload.email,
 		contactNumber: payload.contactNumber,
 		alternateContactNumber: payload.alternateContactNumber,
-		password: await Utils.hashPassword(schoolOwnerPassword)
+		password: await Utils.hashPassword(schoolOwnerPassword),
+		isEnabled: payload.isEnabled
 	});
 
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_CREATED, { schoolOwner });
+}
+
+async function updateSchoolOwner(payload: any) {
+	const schoolOwner = await dbService.findOne(schoolOwnerModel, { _id: payload.schoolOwnerId });
+
+	if (!schoolOwner) {
+		throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+	}
+
+	if (payload.email && payload.email !== schoolOwner.email) {
+		const schoolOwnerWithDuplicateEmail = await dbService.findOne(schoolOwnerModel, { email: payload.email });
+
+		if (schoolOwnerWithDuplicateEmail) {
+			throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_EMAIL_ALREADY_EXISTS, Constants.ERROR_TYPES.BAD_REQUEST);
+		}
+	}
+
+	if (payload.contactNumber && payload.contactNumber !== schoolOwner.contactNumber) {
+		const schoolOwnerWithDuplicatePhoneNumber = await dbService.findOne(schoolOwnerModel, { contactNumber: payload.contactNumber });
+
+		if (schoolOwnerWithDuplicatePhoneNumber) {
+			throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_CONTACT_NUMBER_ALREADY_EXISTS, Constants.ERROR_TYPES.BAD_REQUEST);
+		}
+	}
+
+	if (payload.alternateContactNumber && payload.alternateContactNumber !== schoolOwner.alternateContactNumber) {
+		const schoolOwnerWithDuplicateAlternatePhoneNumber = await dbService.findOne(schoolOwnerModel, { alternateContactNumber: payload.alternateContactNumber });
+
+		if (schoolOwnerWithDuplicateAlternatePhoneNumber) {
+			throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_CONTACT_NUMBER_ALREADY_EXISTS, Constants.ERROR_TYPES.BAD_REQUEST);
+		}
+	}
+
+	await dbService.updateOne(
+		schoolOwnerModel,
+		{ _id: payload.schoolOwnerId },
+		{
+			$set: {
+				...(payload.name && { name: payload.name }),
+				...(payload.email && { email: payload.email }),
+				...(payload.contactNumber && { contactNumber: payload.contactNumber }),
+				...(payload.alternateContactNumber && { alternateContactNumber: payload.alternateContactNumber }),
+				...(payload.isEnabled !== undefined && { isEnabled: payload.isEnabled })
+			}
+		}
+	);
+
+	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_UPDATED);
 }
 
 async function listSchoolOwners(payload: any) {
@@ -127,6 +176,7 @@ async function loginSchoolOwner(payload: any) {
 
 export const schoolOwnerController = {
 	createSchoolOwner,
+	updateSchoolOwner,
 	listSchoolOwners,
 	fetchSchoolOwnerDetails,
 	loginSchoolOwner
