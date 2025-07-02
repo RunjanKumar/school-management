@@ -16,6 +16,24 @@ async function createSchool(payload: any) {
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_CREATED, { school });
 }
 
+async function updateSchool(payload: any) {
+	await dbService.updateOne(
+		schoolModel,
+		{ _id: payload.schoolId },
+		{
+			$set: {
+				...(payload.hasOwnProperty('name') && { name: payload.name }),
+				...(payload.hasOwnProperty('website') && { website: payload.website }),
+				...(payload.hasOwnProperty('email') && { email: payload.email }),
+				...(payload.hasOwnProperty('contactNumber') && { contactNumber: payload.contactNumber }),
+				...(payload.hasOwnProperty('address') && { address: payload.address })
+			}
+		}
+	);
+
+	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_UPDATED);
+}
+
 async function getSchools(payload: any) {
 	const matchCriteria: Record<string, boolean | Record<string, Record<string, string>>[]> = { isDeleted: false };
 
@@ -65,6 +83,7 @@ async function deleteSchools(payload: any) {
 
 export const schoolController = {
 	createSchool,
+	updateSchool,
 	getSchools,
 	deleteSchools
 };

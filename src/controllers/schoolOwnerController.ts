@@ -70,11 +70,11 @@ async function updateSchoolOwner(payload: any) {
 		{ _id: payload.schoolOwnerId },
 		{
 			$set: {
-				...(payload.name && { name: payload.name }),
-				...(payload.email && { email: payload.email }),
-				...(payload.contactNumber && { contactNumber: payload.contactNumber }),
-				...(payload.alternateContactNumber && { alternateContactNumber: payload.alternateContactNumber }),
-				...(payload.isEnabled !== undefined && { isEnabled: payload.isEnabled })
+				...(payload.hasOwnProperty('name') && { name: payload.name }),
+				...(payload.hasOwnProperty('email') && { email: payload.email }),
+				...(payload.hasOwnProperty('contactNumber') && { contactNumber: payload.contactNumber }),
+				...(payload.hasOwnProperty('alternateContactNumber') && { alternateContactNumber: payload.alternateContactNumber }),
+				...(payload.hasOwnProperty('isEnabled') && { isEnabled: payload.isEnabled })
 			}
 		}
 	);

@@ -33,6 +33,34 @@ const routes: any = [
 		handler: schoolController.createSchool
 	},
 	{
+		method: 'PUT',
+		path: '/v1/school',
+		joiSchemaForSwagger: {
+			headers: {
+				authorization: Joi.string().required().description('School owner\'s JWT token')
+			},
+			body: {
+				schoolId: Joi.string().mongoId().required().description('School ID'),
+				name: Joi.string().required().description('Name of the school'),
+				website: Joi.string().optional().description('Website of the school'),
+				email: Joi.string().email().lowercase().required().description('Email of the school'),
+				contactNumber: Joi.string().phoneNumber().required().description('Contact number of the school'),
+				address: Joi.object().keys({
+					city: Joi.string().required().description('City of the school'),
+					state: Joi.string().required().description('State of the school'),
+					zipcode: Joi.string().required().description('Zipcode of the school'),
+					address: Joi.string().required().description('Address of the school'),
+					landmark: Joi.string().optional().description('Landmark of the school')
+				})
+			},
+			group: 'School',
+			description: 'API to update a school.',
+			model: 'UpdateSchool'
+		},
+		auth: Constants.AVAILABLE_AUTHS.SCHOOL_OWNER,
+		handler: schoolController.updateSchool
+	},
+	{
 		method: 'GET',
 		path: '/v1/school',
 		joiSchemaForSwagger: {

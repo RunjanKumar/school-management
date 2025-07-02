@@ -36,7 +36,8 @@ const RESPONSE_MESSAGES = {
 	SCHOOLS_DELETED: 'Schools deleted successfully.',
 	SCHOOL_DELETED: 'School deleted successfully.',
 	SCHOOLS_NOT_FOUND: 'Schools not found.',
-	SCHOOL_NOT_FOUND: 'School not found.'
+	SCHOOL_NOT_FOUND: 'School not found.',
+	SCHOOL_UPDATED: 'School updated successfully.'
 };
 
 const ERROR_TYPES = {
