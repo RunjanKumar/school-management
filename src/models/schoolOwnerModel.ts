@@ -24,6 +24,10 @@ const schoolOwnerSchema: Schema<SchoolOwnerInterface> = new Schema(
 			type: String,
 			required: true
 		},
+		hasSetPassword: {
+			type: Boolean,
+			default: false
+		},
 		isDeleted: {
 			type: Boolean,
 			default: false

@@ -23,6 +23,20 @@ const routes: any = [
 			model: 'CreateSchoolOwner'
 		},
 		handler: schoolOwnerController.createSchoolOwner
+	},
+	{
+		method: 'POST',
+		path: '/v1/schoolOwner/login',
+		joiSchemaForSwagger: {
+			body: {
+				email: Joi.string().email().lowercase().required().description('Email of the school owner'),
+				password: Joi.string().required().description('Password of the school owner')
+			},
+			group: 'School Owner',
+			description: 'API to login a school owner.',
+			model: 'LoginSchoolOwner'
+		},
+		handler: schoolOwnerController.loginSchoolOwner
 	}
 ];
 

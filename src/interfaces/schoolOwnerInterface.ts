@@ -9,5 +9,6 @@ export interface SchoolOwnerInterface extends Document {
 	contactNumber: string;
 	alternateContactNumber?: string;
 	password: string;
+	hasSetPassword: boolean;
 	isDeleted: boolean;
 }

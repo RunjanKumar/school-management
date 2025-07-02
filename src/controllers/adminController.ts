@@ -31,7 +31,7 @@ async function loginAdmin(payload: any) {
 	}
 
 	// generate token
-	const token = Utils.generateJWTToken(admin._id.toString(), Constants.TOKEN_EXPIRATION_TIME.LOGIN);
+	const token = Utils.generateJWTToken(admin._id.toString(), Constants.TOKEN_EXPIRATION_TIME.ADMIN_LOGIN);
 
 	// create session
 	await dbService.create(sessionModel, {
@@ -39,7 +39,7 @@ async function loginAdmin(payload: any) {
 		refPath: Constants.SESSIONS_REF_PATH.ADMIN,
 		type: Constants.SESSION.LOGIN,
 		token: token.token,
-		expirationTime: new Date(Date.now() + Constants.TOKEN_EXPIRATION_TIME.LOGIN * 1000)
+		expirationTime: new Date(Date.now() + Constants.TOKEN_EXPIRATION_TIME.ADMIN_LOGIN * 1000)
 	});
 
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.LOGIN_SUCCESSFUL, { token: token.token });
@@ -86,14 +86,14 @@ async function forgotAdminPassword(payload: any) {
 		throw createErrorResponse(Constants.RESPONSE_MESSAGES.ADMIN_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
-	const forgotPasswordToken = Utils.generateJWTToken(admin._id.toString(), Constants.TOKEN_EXPIRATION_TIME.FORGOT_PASSWORD);
+	const forgotPasswordToken = Utils.generateJWTToken(admin._id.toString(), Constants.TOKEN_EXPIRATION_TIME.ADMIN_FORGOT_PASSWORD);
 
 	await dbService.create(sessionModel, {
 		userId: admin._id,
 		refPath: Constants.SESSIONS_REF_PATH.ADMIN,
 		type: Constants.SESSION.FORGOT_PASSWORD,
 		token: forgotPasswordToken.token,
-		expirationTime: new Date(Date.now() + Constants.TOKEN_EXPIRATION_TIME.FORGOT_PASSWORD * 1000)
+		expirationTime: new Date(Date.now() + Constants.TOKEN_EXPIRATION_TIME.ADMIN_FORGOT_PASSWORD * 1000)
 	});
 
 	await sendEmail(
