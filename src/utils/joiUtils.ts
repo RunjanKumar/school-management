@@ -8,9 +8,19 @@ const joiUtils: any = {
 		type: 'string',
 		base: joi.string(),
 		messages: {
-			'string.objectId': '{{#label}} must be a valid id'
+			'string.objectId': '{{#label}} must be a valid id',
+			'string.phoneNumber': Constants.RESPONSE_MESSAGES.PHONE_NUMBER_VALIDATION_FAILED,
+			'string.password': Constants.RESPONSE_MESSAGES.PASSWORD_VALIDATION_FAILED
 		},
 		rules: {
+			phoneNumber: {
+				validate(value: any, helpers: any) {
+					if (!Constants.REGEX.PHONE_NUMBER.test(value)) {
+						return helpers.error('string.phoneNumber');
+					}
+					return value;
+				}
+			},
 			mongoId: {
 				validate(value: any, helpers: any) {
 					if (mongoose.Types.ObjectId.isValid(value)) {
@@ -22,7 +32,7 @@ const joiUtils: any = {
 			password: {
 				validate(value: any, helpers: any) {
 					if (!Constants.REGEX.PASSWORD.test(value)) {
-						return helpers.error(Constants.RESPONSE_MESSAGES.PASSWORD_VALIDATION_FAILED);
+						return helpers.error('string.password');
 					}
 					return value;
 				}
