@@ -189,11 +189,34 @@ async function loginSchoolOwner(payload: any) {
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.LOGIN_SUCCESSFUL, { token: token.token });
 }
 
+async function changePassword(payload: any) {
+	// check if current password is correct
+	const isPasswordValid = await Utils.comparePassword(payload.password, payload.schoolOwner.password);
+
+	if (!isPasswordValid) {
+		throw createErrorResponse(Constants.RESPONSE_MESSAGES.INVALID_PASSWORD, Constants.ERROR_TYPES.BAD_REQUEST);
+	}
+
+	await dbService.updateOne(
+		schoolOwnerModel,
+		{ _id: payload.schoolOwner._id },
+		{
+			$set: {
+				password: await Utils.hashPassword(payload.newPassword),
+				hasSetPassword: true
+			}
+		}
+	);
+
+	return createSuccessResponse(Constants.RESPONSE_MESSAGES.PASSWORD_CHANGED);
+}
+
 export const schoolOwnerController = {
 	createSchoolOwner,
 	updateSchoolOwner,
 	listSchoolOwners,
 	fetchSchoolOwnerDetails,
 	deleteSchoolOwners,
-	loginSchoolOwner
+	loginSchoolOwner,
+	changePassword
 };

@@ -116,6 +116,25 @@ const routes: any = [
 			model: 'LoginSchoolOwner'
 		},
 		handler: schoolOwnerController.loginSchoolOwner
+	},
+	{
+		method: 'PUT',
+		path: '/v1/schoolOwner/changePassword',
+		joiSchemaForSwagger: {
+			headers: {
+				authorization: Joi.string().required().description('School owner\'s JWT token')
+			},
+			body: {
+				password: Joi.string().required().description('Current password of the school owner'),
+				newPassword: Joi.string().password().required().description('New password of the school owner')
+			},
+			group: 'School Owner',
+			description: 'API to change password of a school owner.',
+			model: 'ChangePassword'
+		},
+		auth: Constants.AVAILABLE_AUTHS.SCHOOL_OWNER,
+		allowWithoutSetPassword: true,
+		handler: schoolOwnerController.changePassword
 	}
 ];
 

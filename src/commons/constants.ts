@@ -26,7 +26,9 @@ const RESPONSE_MESSAGES = {
 	SCHOOL_OWNER_UPDATED: 'School owner updated successfully.',
 	SCHOOL_OWNER_DELETED: 'School owner deleted successfully.',
 	SCHOOL_OWNERS_DELETED: 'School owners deleted successfully.',
-	SCHOOL_OWNERS_NOT_FOUND: 'School owners not found.'
+	SCHOOL_OWNERS_NOT_FOUND: 'School owners not found.',
+	PASSWORD_CHANGED: 'Password changed successfully.',
+	INVALID_PASSWORD: 'Invalid password.'
 };
 
 const ERROR_TYPES = {
@@ -103,7 +105,9 @@ const USER_VALIDATION_CHECK = { isDeleted: { $ne: true } };
 
 const AVAILABLE_AUTHS = {
 	ADMIN: 1,
-	ADMIN_FORGOT_PASSWORD: 2
+	ADMIN_FORGOT_PASSWORD: 2,
+	SCHOOL_OWNER: 3,
+	SCHOOL_OWNER_FORGOT_PASSWORD: 4
 };
 
 const KYC_STATUS = {

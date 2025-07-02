@@ -43,7 +43,7 @@ const routeUtils: any = {
 			const middlewares: RequestHandler[] = [];
 
 			if (route.auth) {
-				middlewares.push(authService.validateAuth(route.auth));
+				middlewares.push(authService.validateAuth(route.auth, route.allowWithoutSetPassword));
 			}
 			if (route.authWebhook) {
 				middlewares.push(authService.webhookValidate(route.authWebhook));
@@ -122,6 +122,7 @@ const getHandlerMethod = (route: any) => {
 			...((request.formData || {}).value || {}),
 			user: request.user ? request.user : {},
 			admin: request.admin ? request.admin : {},
+			schoolOwner: request.schoolOwner ? request.schoolOwner : {},
 			userSession: request.userSession ? request.userSession : {},
 			authToken: request.headers.authorization || '',
 			key: !!request.headers['x-api-key'],
