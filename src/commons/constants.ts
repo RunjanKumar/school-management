@@ -28,7 +28,8 @@ const RESPONSE_MESSAGES = {
 	SCHOOL_OWNERS_DELETED: 'School owners deleted successfully.',
 	SCHOOL_OWNERS_NOT_FOUND: 'School owners not found.',
 	PASSWORD_CHANGED: 'Password changed successfully.',
-	INVALID_PASSWORD: 'Invalid password.'
+	INVALID_PASSWORD: 'Invalid password.',
+	ACCOUNT_DETAILS_UPDATED: 'Account details updated successfully.'
 };
 
 const ERROR_TYPES = {

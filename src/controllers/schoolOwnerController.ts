@@ -211,6 +211,12 @@ async function changePassword(payload: any) {
 	return createSuccessResponse(Constants.RESPONSE_MESSAGES.PASSWORD_CHANGED);
 }
 
+async function updateAccountDetails(payload: any) {
+	await dbService.updateOne(schoolOwnerModel, { _id: payload.schoolOwner._id }, { $set: { name: payload.name } });
+
+	return createSuccessResponse(Constants.RESPONSE_MESSAGES.ACCOUNT_DETAILS_UPDATED);
+}
+
 export const schoolOwnerController = {
 	createSchoolOwner,
 	updateSchoolOwner,
