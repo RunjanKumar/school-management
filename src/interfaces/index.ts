@@ -3,5 +3,6 @@ import { DBVersionInterface } from './dbVersionInterface';
 import { SessionInterface } from './sessionInterface';
 import { AuthenticatedRequestInterface } from './authenticatedRequestInterface';
 import { SchoolOwnerInterface } from './schoolOwnerInterface';
+import { SchoolInterface } from './schoolInterface';
 
-export { AdminInterface, DBVersionInterface, SessionInterface, AuthenticatedRequestInterface, SchoolOwnerInterface };
+export { AdminInterface, DBVersionInterface, SessionInterface, AuthenticatedRequestInterface, SchoolOwnerInterface, SchoolInterface };

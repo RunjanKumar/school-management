@@ -30,7 +30,14 @@ const RESPONSE_MESSAGES = {
 	PASSWORD_CHANGED: 'Password changed successfully.',
 	INVALID_PASSWORD: 'Invalid password.',
 	ACCOUNT_DETAILS_UPDATED: 'Account details updated successfully.',
-	PROFILE_DETAILS_FETCHED: 'Profile details fetched successfully.'
+	PROFILE_DETAILS_FETCHED: 'Profile details fetched successfully.',
+	SCHOOL_CREATED: 'School created successfully.',
+	SCHOOLS_FETCHED: 'Schools fetched successfully.',
+	SCHOOLS_DELETED: 'Schools deleted successfully.',
+	SCHOOL_DELETED: 'School deleted successfully.',
+	SCHOOLS_NOT_FOUND: 'Schools not found.',
+	SCHOOL_NOT_FOUND: 'School not found.',
+	SCHOOL_UPDATED: 'School updated successfully.'
 };
 
 const ERROR_TYPES = {
