@@ -4,7 +4,7 @@ import { adminModel, sessionModel } from '../models';
 import { Constants } from '../commons/constants';
 import { Utils } from '../utils/utils';
 import { AdminInterface } from '../interfaces';
-import { sendEmail } from '../utils/commonFunctions';
+import { sendEmailWithSES } from '../utils/commonFunctions';
 import config from '../config';
 
 /**
@@ -106,8 +106,7 @@ async function forgotAdminPassword(payload: any) {
 		token: forgotPasswordToken.token,
 		expirationTime: new Date(Date.now() + Constants.TOKEN_EXPIRATION_TIME.ADMIN_FORGOT_PASSWORD * 1000)
 	});
-
-	await sendEmail(
+	await sendEmailWithSES(
 		{
 			email: admin.email,
 			firstName: Utils.capitalizeFirstLetter(admin.name.split(' ')[0]),

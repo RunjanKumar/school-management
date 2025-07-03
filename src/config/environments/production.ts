@@ -67,5 +67,10 @@ export default {
 	DUMMY_DATA_FOR_MEASUREMENT: process.env.DUMMY_DATA_FOR_MEASUREMENT === '1' || false,
 	OPENAI_API_KEY: process.env.OPENAI_API_KEY || 'your-openai-api-key',
 	IS_DUMMY_DATA_FOR_GARMENT_ANALYSIS: process.env.DUMMY_DATA_FOR_GARMENT_ANALYSIS === '1' || false,
-	CLIENT_EMAIL: process.env.CLIENT_EMAIL || 'adminboilerplate@yopmail.com'
+	CLIENT_EMAIL: process.env.CLIENT_EMAIL || 'adminboilerplate@yopmail.com',
+	AWS: {
+		REGION: process.env.AWS_REGION || '',
+		SES_ACCESS_ID: process.env.AWS_SES_ACCESS_ID || '',
+		SES_SECRET_KEY: process.env.AWS_SES_SECRET_KEY || ''
+	}
 };
