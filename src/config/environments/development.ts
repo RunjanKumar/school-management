@@ -11,6 +11,7 @@ type Config = {
 	CLIENT_EMAIL: string;
 	PATH_TO_UPLOAD_FILES_ON_LOCAL_SERVER: string;
 	AWS: Record<string, string>;
+	COMMUNICATION_EMAIL: string;
 };
 
 const config: Config = {
@@ -61,7 +62,8 @@ const config: Config = {
 		SES_ACCESS_ID: process.env.AWS_SES_ACCESS_ID || '',
 		SES_SECRET_KEY: process.env.AWS_SES_SECRET_KEY || ''
 	},
-	CLIENT_EMAIL: process.env.CLIENT_EMAIL || ''
+	CLIENT_EMAIL: process.env.CLIENT_EMAIL || '',
+	COMMUNICATION_EMAIL: process.env.COMMUNICATION_EMAIL || ''
 };
 
 export default config;

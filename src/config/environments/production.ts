@@ -72,5 +72,6 @@ export default {
 		REGION: process.env.AWS_REGION || '',
 		SES_ACCESS_ID: process.env.AWS_SES_ACCESS_ID || '',
 		SES_SECRET_KEY: process.env.AWS_SES_SECRET_KEY || ''
-	}
+	},
+	COMMUNICATION_EMAIL: process.env.COMMUNICATION_EMAIL || ''
 };

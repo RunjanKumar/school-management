@@ -27,7 +27,7 @@ const emailTypes = (payload: any, type: any) => {
 
 	switch (type) {
 	case Constants.EMAIL_TYPES.FORGOT_PASSWORD:
-		EmailStatus.Subject = Constants.EMAIL_SUBJECTS.FORGOT_PASSWORD;
+		EmailStatus.Subject = Constants.EMAIL_SUBJECTS.FORGOTq_PASSWORD;
 		EmailStatus.template = Constants.EMAIL_CONTENTS.FORGOT_PASSWORD;
 		EmailStatus.data.firstName = payload.firstName;
 		EmailStatus.data.resetUrl = payload.resetUrl;
@@ -138,8 +138,7 @@ export const sendEmailWithSES = async (payload: any, type: number) => {
 	}
 
 	const emailParams: SendEmailCommandInput = {
-		// Source: config.SMTP.SENDER, // Example: 'noreply@schoolmanagement.space'
-		Source: 'noreply@schoolmanagement.space',
+		Source: config.COMMUNICATION_EMAIL,
 		Destination: {
 			ToAddresses: Array.isArray(email) ? email : [ email ],
 			CcAddresses: ccEmail ? (Array.isArray(ccEmail) ? ccEmail : [ ccEmail ]) : [],
