@@ -10,6 +10,8 @@ type Config = {
 	SWAGGER_AUTH: any;
 	CLIENT_EMAIL: string;
 	PATH_TO_UPLOAD_FILES_ON_LOCAL_SERVER: string;
+	AWS: Record<string, string>;
+	COMMUNICATION_EMAIL: string;
 };
 
 const config: Config = {
@@ -55,7 +57,13 @@ const config: Config = {
 			return process.env.DATABASE_URI || `${this.PROTOCOL}://${this.HOST}:${this.PORT}/${this.NAME}`;
 		}
 	},
-	CLIENT_EMAIL: process.env.CLIENT_EMAIL || ''
+	AWS: {
+		REGION: process.env.AWS_REGION || '',
+		SES_ACCESS_ID: process.env.AWS_SES_ACCESS_ID || '',
+		SES_SECRET_KEY: process.env.AWS_SES_SECRET_KEY || ''
+	},
+	CLIENT_EMAIL: process.env.CLIENT_EMAIL || '',
+	COMMUNICATION_EMAIL: process.env.COMMUNICATION_EMAIL || ''
 };
 
 export default config;

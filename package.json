@@ -8,9 +8,10 @@
     "dev": "nodemon src/server.ts",
     "build": "tsc -p tsconfig.json",
     "prepare": "husky",
-    "lint:fix": "prettier --write 'src/**/*.{ts,tsx,js,jsx,json,md}' && eslint --fix 'src/**/*.{ts,tsx}' && git add ."
+    "lint:fix": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\" && eslint --fix \"src/**/*.{ts,tsx}\" && git add ."
   },
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.840.0",
     "@types/bcrypt": "^5.0.2",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
