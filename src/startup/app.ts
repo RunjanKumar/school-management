@@ -40,7 +40,7 @@ export default async (app: Application) => {
 
 	app.use('/uploads', express.static('uploads'));
 
-	app.all('test', (req: Request, res: Response) => {
+	app.all('/test', (req: Request, res: Response) => {
 		res.send('Hello World');
 	});
 

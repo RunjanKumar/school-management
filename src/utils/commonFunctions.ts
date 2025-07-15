@@ -27,7 +27,7 @@ const emailTypes = (payload: any, type: any) => {
 
 	switch (type) {
 	case Constants.EMAIL_TYPES.FORGOT_PASSWORD:
-		EmailStatus.Subject = Constants.EMAIL_SUBJECTS.FORGOTq_PASSWORD;
+		EmailStatus.Subject = Constants.EMAIL_SUBJECTS.FORGOT_PASSWORD;
 		EmailStatus.template = Constants.EMAIL_CONTENTS.FORGOT_PASSWORD;
 		EmailStatus.data.firstName = payload.firstName;
 		EmailStatus.data.resetUrl = payload.resetUrl;

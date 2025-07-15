@@ -26,5 +26,6 @@ jobs:
           cd ${{ secrets.EC2_APP_DIR }}
           sudo git pull origin development
           npm install
+          npm run build
           sudo pm2 reload 0
         EOF
