@@ -1,4 +1,5 @@
 import { Constants } from '../commons/constants';
+import { MESSAGES } from '../commons/message';
 import { schoolModel } from '../models';
 import dbService from '../services/databaseService';
 import { createErrorResponse, createSuccessResponse } from '../commons/responseHelpers';
@@ -17,16 +18,29 @@ import { createErrorResponse, createSuccessResponse } from '../commons/responseH
  * @throws {Object} Error response if school creation fails
  */
 async function createSchool(payload: any) {
-	const school = await dbService.create(schoolModel, {
+	console.log(payload.schoolOwner._id, 'Creating school with payload:');
+	const schoolData = {
 		name: payload.name,
-		website: payload.website,
+		shortName: payload.shortName,
+		logo: payload.logo,
+		description: payload.description,
+		establishedYear: payload.establishedYear,
 		email: payload.email,
 		contactNumber: payload.contactNumber,
+		website: payload.website,
 		address: payload.address,
+		affiliation: payload.affiliation,
+		board: payload.board,
+		mediumOfInstruction: payload.mediumOfInstruction,
+		schoolType: payload.schoolType,
+		educationalLevels: payload.educationalLevels,
+		bannerImages: payload.bannerImages,
 		schoolOwnerId: payload.schoolOwner._id
-	});
+	};
+	console.log('Creating school with data:', schoolData);
+	const school = await dbService.create(schoolModel, schoolData);
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_CREATED, { school });
+	return createSuccessResponse(MESSAGES.SCHOOL_CREATED, { school });
 }
 
 /**
@@ -42,21 +56,35 @@ async function createSchool(payload: any) {
  * @throws {Object} Error response if school update fails or school not found
  */
 async function updateSchool(payload: any) {
-	await dbService.updateOne(
-		schoolModel,
-		{ _id: payload.schoolId },
-		{
-			$set: {
-				...(payload.hasOwnProperty('name') && { name: payload.name }),
-				...(payload.hasOwnProperty('website') && { website: payload.website }),
-				...(payload.hasOwnProperty('email') && { email: payload.email }),
-				...(payload.hasOwnProperty('contactNumber') && { contactNumber: payload.contactNumber }),
-				...(payload.hasOwnProperty('address') && { address: payload.address })
-			}
-		}
-	);
+	// Step 1: Check if the school exists
+	const existingSchool = await dbService.findOne(schoolModel, { _id: payload.schoolId });
+	if (!existingSchool) {
+		throw createErrorResponse(MESSAGES.SCHOOL_NOT_FOUND, Constants.ERROR_TYPES.DATA_NOT_FOUND);
+	}
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_UPDATED);
+	// Step 2: Build update data object
+	const updateToData: any = {};
+
+	if (payload.hasOwnProperty('name')) updateToData.name = payload.name;
+	if (payload.hasOwnProperty('shortName')) updateToData.shortName = payload.shortName;
+	if (payload.hasOwnProperty('logo')) updateToData.logo = payload.logo;
+	if (payload.hasOwnProperty('description')) updateToData.description = payload.description;
+	if (payload.hasOwnProperty('establishedYear')) updateToData.establishedYear = payload.establishedYear;
+	if (payload.hasOwnProperty('email')) updateToData.email = payload.email;
+	if (payload.hasOwnProperty('contactNumber')) updateToData.contactNumber = payload.contactNumber;
+	if (payload.hasOwnProperty('website')) updateToData.website = payload.website;
+	if (payload.hasOwnProperty('address')) updateToData.address = payload.address;
+	if (payload.hasOwnProperty('affiliation')) updateToData.affiliation = payload.affiliation;
+	if (payload.hasOwnProperty('board')) updateToData.board = payload.board;
+	if (payload.hasOwnProperty('mediumOfInstruction')) updateToData.mediumOfInstruction = payload.mediumOfInstruction;
+	if (payload.hasOwnProperty('schoolType')) updateToData.schoolType = payload.schoolType;
+	if (payload.hasOwnProperty('educationalLevels')) updateToData.educationalLevels = payload.educationalLevels;
+	if (payload.hasOwnProperty('bannerImages')) updateToData.bannerImages = payload.bannerImages;
+	console.log('Update data for school:', updateToData);
+	// Step 3: Perform the update
+	await dbService.updateOne(schoolModel, { _id: payload.schoolId }, { $set: updateToData });
+
+	return createSuccessResponse(MESSAGES.SCHOOL_UPDATED);
 }
 
 /**
@@ -81,6 +109,7 @@ async function getSchools(payload: any) {
 
 	const schools = await dbService.aggregate(schoolModel, [
 		{ $match: matchCriteria },
+		{ $addFields: { studentsCount: 550, staffCount: 85, monthlyCost: 55000 } },
 		{
 			$facet: {
 				data: [ { $sort: { [payload.sortKey]: payload.sortOrder } }, { $skip: payload.skip }, { $limit: payload.limit } ],
@@ -90,7 +119,7 @@ async function getSchools(payload: any) {
 		{ $addFields: { count: { $ifNull: [ { $first: '$count.count' }, 0 ] } } }
 	]);
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOLS_FETCHED, {
+	return createSuccessResponse(MESSAGES.SCHOOLS_FETCHED, {
 		data: schools[0]?.data ?? [],
 		count: schools[0]?.count ?? 0
 	});
@@ -113,7 +142,7 @@ async function deleteSchools(payload: any) {
 	});
 
 	if (existingSchools !== payload.schoolIds.length) {
-		throw createErrorResponse(payload.schoolIds.length ? Constants.RESPONSE_MESSAGES.SCHOOLS_NOT_FOUND : Constants.RESPONSE_MESSAGES.SCHOOL_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+		throw createErrorResponse(payload.schoolIds.length > 1 ? MESSAGES.SCHOOLS_NOT_FOUND : MESSAGES.SCHOOL_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
 	await dbService.updateMany(
@@ -125,7 +154,7 @@ async function deleteSchools(payload: any) {
 		{ $set: { isDeleted: true } }
 	);
 
-	return createSuccessResponse(payload.schoolIds.length ? Constants.RESPONSE_MESSAGES.SCHOOLS_DELETED : Constants.RESPONSE_MESSAGES.SCHOOL_DELETED);
+	return createSuccessResponse(payload.schoolIds.length > 1 ? MESSAGES.SCHOOLS_DELETED : MESSAGES.SCHOOL_DELETED);
 }
 
 export const schoolController = {
