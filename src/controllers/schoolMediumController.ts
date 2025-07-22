@@ -139,7 +139,7 @@ async function deleteSchoolMedium(payload: any) {
 		throw createErrorResponse(MESSAGES.SCHOOL_MEDIUM_IS_ASSOCIATED_WITH_SCHOOLS, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
-	await dbService.updateMany(schoolMediumModel, { _id: { $in: payload.schoolMediumIds } }, { isDeleted: true });
+	await dbService.updateMany(schoolMediumModel, { _id: { $in: payload.schoolMediumIds } }, { $set: { isDeleted: true } });
 
 	return createSuccessResponse(payload.schoolMediumIds.length === 1 ? MESSAGES.SCHOOL_MEDIUM_DELETED : MESSAGES.SCHOOL_MEDIUMS_DELETED);
 }

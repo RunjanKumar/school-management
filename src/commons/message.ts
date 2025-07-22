@@ -72,5 +72,15 @@ export const MESSAGES = {
 	SCHOOL_EDUCATION_LEVELS_FETCHED: 'School education levels fetched successfully.',
 	SCHOOL_EDUCATION_LEVEL_IS_ASSOCIATED_WITH_SCHOOLS: 'School education level is associated with schools.',
 	SCHOOL_EDUCATION_LEVELS_ARE_ASSOCIATED_WITH_SCHOOLS: 'School education levels are associated with schools.',
-	SCHOOL_EDUCATION_LEVELS_DELETED: 'School education levels deleted successfully.'
+	SCHOOL_EDUCATION_LEVELS_DELETED: 'School education levels deleted successfully.',
+
+	// user role related messages
+	USER_ROLE_CREATED: 'User role created successfully.',
+	USER_ROLE_UPDATED: 'User role updated successfully.',
+	USER_ROLE_DELETED: 'User role deleted successfully.',
+	USER_ROLE_NOT_FOUND: 'User role not found.',
+	USER_ROLES_NOT_FOUND: 'User roles not found.',
+	USER_ROLE_ALREADY_EXISTS: 'User role already exists.',
+	USER_ROLES_FETCHED: 'User roles fetched successfully.',
+	USER_ROLES_DELETED: 'User roles deleted successfully.'
 };

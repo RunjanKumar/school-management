@@ -156,7 +156,7 @@ async function deleteSchoolBoard(payload: any) {
 		throw createErrorResponse(payload.schoolBoardIds.length === 1 ? MESSAGES.SCHOOL_BOARD_IS_ASSOCIATED_WITH_SCHOOLS : MESSAGES.SCHOOL_BOARDS_ARE_ASSOCIATED_WITH_SCHOOLS, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
-	await dbService.updateMany(schoolBoardModel, { _id: { $in: payload.schoolBoardIds } }, { isDeleted: true });
+	await dbService.updateMany(schoolBoardModel, { _id: { $in: payload.schoolBoardIds } }, { $set: { isDeleted: true } });
 
 	return createSuccessResponse(payload.schoolBoardIds.length === 1 ? MESSAGES.SCHOOL_BOARD_DELETED : MESSAGES.SCHOOL_BOARDS_DELETED);
 }
