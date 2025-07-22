@@ -36,5 +36,14 @@ export const MESSAGES = {
 	SCHOOL_DELETED: 'School deleted successfully.',
 	SCHOOLS_DELETED: 'Schools deleted successfully.',
 	SCHOOL_NOT_FOUND: 'School not found.',
-	SCHOOLS_NOT_FOUND: 'Schools not found.'
+	SCHOOLS_NOT_FOUND: 'Schools not found.',
+
+	// school board related messages
+	SCHOOL_BOARD_CREATED: 'School board created successfully.',
+	SCHOOL_BOARD_UPDATED: 'School board updated successfully.',
+	SCHOOL_BOARD_DELETED: 'School board deleted successfully.',
+	SCHOOL_BOARD_NOT_FOUND: 'School board not found.',
+	SCHOOL_BOARDS_NOT_FOUND: 'School boards not found.',
+	SCHOOL_BOARD_ALREADY_EXISTS: 'School board already exists.',
+	SCHOOL_BOARDS_FETCHED: 'School boards fetched successfully.'
 };

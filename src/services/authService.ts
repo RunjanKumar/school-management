@@ -24,6 +24,8 @@ authService.validateAuth = (auth: number, allowWithoutSetPassword: boolean = fal
 		return authService.schoolOwnerValidate(allowWithoutSetPassword);
 	case Constants.AVAILABLE_AUTHS.SCHOOL_OWNER_FORGOT_PASSWORD:
 		return authService.schoolOwnerForgotPasswordValidate();
+	case Constants.AVAILABLE_AUTHS.ADMIN_AND_SCHOOL_OWNER:
+		return authService.adminAndSchoolOwnerValidate();
 	default:
 		return (request: AuthenticatedRequestInterface, response: Response, next: NextFunction) => {
 			next();
@@ -120,6 +122,21 @@ authService.schoolOwnerForgotPasswordValidate = () => {
 				const responseObject = createErrorResponse(MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
 				return response.status(responseObject.statusCode).json(responseObject);
 			});
+	};
+};
+
+/**
+ * Validate admin and school owner
+ * @param {AuthenticatedRequestInterface} request - Request object
+ * @returns {Promise<boolean>} - True if admin and school owner is valid, false otherwise
+ */
+authService.adminAndSchoolOwnerValidate = () => {
+	return (request: AuthenticatedRequestInterface, response: Response, next: NextFunction) => {
+		validateAdminAndSchoolOwner(request).then((result) => {
+			if (result) {
+				return next();
+			}
+		});
 	};
 };
 
@@ -281,6 +298,57 @@ const validateSchoolOwnerForgotPassword = async (request: AuthenticatedRequestIn
 
 	request.schoolOwner = schoolOwner;
 	return true;
+};
+
+const validateAdminAndSchoolOwner = async (request: AuthenticatedRequestInterface) => {
+	const token = request.headers.authorization;
+
+	if (!token) {
+		return false;
+	}
+
+	const decoded = Utils.decryptJWTToken(token);
+
+	if (!decoded) {
+		return false;
+	}
+
+	const session = await dbService.findOne(Models.sessionModel, {
+		token: token,
+		refPath: { $in: [ Constants.SESSIONS_REF_PATH.ADMIN, Constants.SESSIONS_REF_PATH.SCHOOL_OWNER ] },
+		type: Constants.SESSION.LOGIN,
+		expirationTime: { $gt: new Date() }
+	});
+
+	if (!session) {
+		return false;
+	}
+
+	if (session.refPath === Constants.SESSIONS_REF_PATH.ADMIN) {
+		const admin = await dbService.findOne(Models.adminModel, {
+			_id: decoded.id,
+			isDeleted: false
+		});
+
+		if (!admin) {
+			return false;
+		}
+
+		request.admin = admin;
+		return true;
+	} else {
+		const schoolOwner = await dbService.findOne(Models.schoolOwnerModel, {
+			_id: decoded.id,
+			isDeleted: false
+		});
+
+		if (!schoolOwner) {
+			return false;
+		}
+
+		request.schoolOwner = schoolOwner;
+		return true;
+	}
 };
 
 export default authService;
