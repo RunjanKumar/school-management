@@ -1,7 +1,7 @@
 import { createSuccessResponse, createErrorResponse } from '../commons/responseHelpers';
 import { MESSAGES } from '../commons/message';
 import { Constants } from '../commons/constants';
-import schoolBoardModel from '../models/schoolBoardModel';
+import { schoolBoardModel, schoolModel } from '../models';
 import dbService from '../services/databaseService';
 import { Types } from 'mongoose';
 
@@ -145,6 +145,15 @@ async function deleteSchoolBoard(payload: any) {
 
 	if (existingBoardsCount !== payload.schoolBoardIds.length) {
 		throw createErrorResponse(payload.schoolBoardIds.length === 1 ? MESSAGES.SCHOOL_BOARD_NOT_FOUND : MESSAGES.SCHOOL_BOARDS_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+	}
+
+	const assignedSchoolsCount = await dbService.count(schoolModel, {
+		affiliatedSchoolBoard: { $in: payload.schoolBoardIds },
+		isDeleted: false
+	});
+
+	if (assignedSchoolsCount) {
+		throw createErrorResponse(payload.schoolBoardIds.length === 1 ? MESSAGES.SCHOOL_BOARD_IS_ASSOCIATED_WITH_SCHOOLS : MESSAGES.SCHOOL_BOARDS_ARE_ASSOCIATED_WITH_SCHOOLS, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
 	await dbService.updateMany(schoolBoardModel, { _id: { $in: payload.schoolBoardIds } }, { isDeleted: true });

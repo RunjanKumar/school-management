@@ -98,14 +98,10 @@ const schoolSchema: Schema<SchoolInterface> = new Schema(
 		},
 
 		// School Specifics
-		affiliation: {
-			type: Number,
-			enum: [ ...Object.values(Constants.SCHOOL_AFFILIATION_TYPES) ],
-			default: Constants.SCHOOL_AFFILIATION_TYPES.OTHER
-		},
-		board: {
-			type: String,
-			trim: true // Applicable if affiliation is 'Other' or more specific board details are needed
+		affiliatedSchoolBoard: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'schoolBoards',
+			required: true
 		},
 		mediumOfInstruction: {
 			type: [ String ], // e.g., ['English', 'Hindi']

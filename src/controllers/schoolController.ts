@@ -1,6 +1,6 @@
 import { Constants } from '../commons/constants';
 import { MESSAGES } from '../commons/message';
-import { schoolModel } from '../models';
+import { schoolModel, schoolBoardModel } from '../models';
 import dbService from '../services/databaseService';
 import { createErrorResponse, createSuccessResponse } from '../commons/responseHelpers';
 
@@ -18,7 +18,16 @@ import { createErrorResponse, createSuccessResponse } from '../commons/responseH
  * @throws {Object} Error response if school creation fails
  */
 async function createSchool(payload: any) {
-	console.log(payload.schoolOwner._id, 'Creating school with payload:');
+	// Validate affiliatedSchoolBoard
+	const schoolBoard = await dbService.findOne(schoolBoardModel, {
+		_id: payload.affiliatedSchoolBoard,
+		isDeleted: false
+	});
+
+	if (!schoolBoard) {
+		throw createErrorResponse(MESSAGES.SCHOOL_BOARD_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+	}
+
 	const schoolData = {
 		name: payload.name,
 		shortName: payload.shortName,
@@ -29,15 +38,14 @@ async function createSchool(payload: any) {
 		contactNumber: payload.contactNumber,
 		website: payload.website,
 		address: payload.address,
-		affiliation: payload.affiliation,
-		board: payload.board,
+		affiliatedSchoolBoard: payload.affiliatedSchoolBoard,
 		mediumOfInstruction: payload.mediumOfInstruction,
 		schoolType: payload.schoolType,
 		educationalLevels: payload.educationalLevels,
 		bannerImages: payload.bannerImages,
 		schoolOwnerId: payload.schoolOwner._id
 	};
-	console.log('Creating school with data:', schoolData);
+
 	const school = await dbService.create(schoolModel, schoolData);
 
 	return createSuccessResponse(MESSAGES.SCHOOL_CREATED, { school });
@@ -65,6 +73,18 @@ async function updateSchool(payload: any) {
 	// Step 2: Build update data object
 	const updateToData: any = {};
 
+	if (payload.hasOwnProperty('affiliatedSchoolBoard') && String(payload.affiliatedSchoolBoard) !== String(existingSchool.affiliatedSchoolBoard)) {
+		const schoolBoard = await dbService.findOne(schoolBoardModel, {
+			_id: payload.affiliatedSchoolBoard,
+			isDeleted: false
+		});
+
+		if (!schoolBoard) {
+			throw createErrorResponse(MESSAGES.SCHOOL_BOARD_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+		}
+		updateToData.affiliatedSchoolBoard = payload.affiliatedSchoolBoard;
+	}
+
 	if (payload.hasOwnProperty('name')) updateToData.name = payload.name;
 	if (payload.hasOwnProperty('shortName')) updateToData.shortName = payload.shortName;
 	if (payload.hasOwnProperty('logo')) updateToData.logo = payload.logo;
@@ -74,13 +94,10 @@ async function updateSchool(payload: any) {
 	if (payload.hasOwnProperty('contactNumber')) updateToData.contactNumber = payload.contactNumber;
 	if (payload.hasOwnProperty('website')) updateToData.website = payload.website;
 	if (payload.hasOwnProperty('address')) updateToData.address = payload.address;
-	if (payload.hasOwnProperty('affiliation')) updateToData.affiliation = payload.affiliation;
-	if (payload.hasOwnProperty('board')) updateToData.board = payload.board;
 	if (payload.hasOwnProperty('mediumOfInstruction')) updateToData.mediumOfInstruction = payload.mediumOfInstruction;
 	if (payload.hasOwnProperty('schoolType')) updateToData.schoolType = payload.schoolType;
 	if (payload.hasOwnProperty('educationalLevels')) updateToData.educationalLevels = payload.educationalLevels;
 	if (payload.hasOwnProperty('bannerImages')) updateToData.bannerImages = payload.bannerImages;
-	console.log('Update data for school:', updateToData);
 	// Step 3: Perform the update
 	await dbService.updateOne(schoolModel, { _id: payload.schoolId }, { $set: updateToData });
 
@@ -90,6 +107,7 @@ async function updateSchool(payload: any) {
 /**
  * Retrieves a list of schools with pagination and search functionality
  * @param {Object} payload - Request payload containing search and pagination parameters
+ * @param {string} payload.schoolId - School ID to filter schools by (optional)
  * @param {string} [payload.searchString] - Search string to filter schools by name, email, or contact number (optional)
  * @param {string} payload.sortKey - Field name to sort by
  * @param {number} payload.sortOrder - Sort order (1 for ascending, -1 for descending)
@@ -103,6 +121,10 @@ async function updateSchool(payload: any) {
 async function getSchools(payload: any) {
 	const matchCriteria: Record<string, boolean | Record<string, Record<string, string>>[]> = { isDeleted: false };
 
+	if (payload.schoolId) {
+		matchCriteria._id = payload.schoolId;
+	}
+
 	if (payload.searchString) {
 		matchCriteria.$or = [ { name: { $regex: payload.searchString, $options: 'i' } }, { email: { $regex: payload.searchString, $options: 'i' } }, { contactNumber: { $regex: payload.searchString, $options: 'i' } } ];
 	}
@@ -111,8 +133,50 @@ async function getSchools(payload: any) {
 		{ $match: matchCriteria },
 		{ $addFields: { studentsCount: 550, staffCount: 85, monthlyCost: 55000 } },
 		{
+			$lookup: {
+				from: 'schoolBoards',
+				localField: 'affiliatedSchoolBoard',
+				foreignField: '_id',
+				as: 'affiliatedSchoolBoard'
+			}
+		},
+		{
+			$unwind: {
+				path: '$affiliatedSchoolBoard',
+				preserveNullAndEmptyArrays: true
+			}
+		},
+		{
 			$facet: {
-				data: [ { $sort: { [payload.sortKey]: payload.sortOrder } }, { $skip: payload.skip }, { $limit: payload.limit } ],
+				data: [
+					{ $sort: { [payload.sortKey]: payload.sortOrder } },
+					{ $skip: payload.skip },
+					{ $limit: payload.limit },
+					{
+						$project: {
+							_id: 1,
+							name: 1,
+							shortName: 1,
+							logo: 1,
+							description: 1,
+							establishedYear: 1,
+							email: 1,
+							contactNumber: 1,
+							website: 1,
+							address: 1,
+							'affiliatedSchoolBoard._id': 1,
+							'affiliatedSchoolBoard.name': 1,
+							mediumOfInstruction: 1,
+							schoolType: 1,
+							educationalLevels: 1,
+							bannerImages: 1,
+							studentsCount: 1,
+							staffCount: 1,
+							monthlyCost: 1,
+							createdAt: 1
+						}
+					}
+				],
 				count: [ { $count: 'count' } ]
 			}
 		},

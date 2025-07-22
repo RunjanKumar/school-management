@@ -45,5 +45,7 @@ export const MESSAGES = {
 	SCHOOL_BOARD_NOT_FOUND: 'School board not found.',
 	SCHOOL_BOARDS_NOT_FOUND: 'School boards not found.',
 	SCHOOL_BOARD_ALREADY_EXISTS: 'School board already exists.',
-	SCHOOL_BOARDS_FETCHED: 'School boards fetched successfully.'
+	SCHOOL_BOARDS_FETCHED: 'School boards fetched successfully.',
+	SCHOOL_BOARD_IS_ASSOCIATED_WITH_SCHOOLS: 'School board is associated with schools.',
+	SCHOOL_BOARDS_ARE_ASSOCIATED_WITH_SCHOOLS: 'School boards are associated with schools.'
 };

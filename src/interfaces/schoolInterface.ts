@@ -27,8 +27,7 @@ export interface SchoolInterface extends Document {
 			coordinates: [number, number];
 		};
 	};
-	affiliation: (typeof Constants.SCHOOL_AFFILIATION_TYPES)[keyof typeof Constants.SCHOOL_AFFILIATION_TYPES];
-	board?: string;
+	affiliatedSchoolBoard: Types.ObjectId;
 	mediumOfInstruction?: string[];
 	schoolType: (typeof Constants.SCHOOL_TYPES)[keyof typeof Constants.SCHOOL_TYPES];
 	educationalLevels: Array<(typeof Constants.EDUCATIONAL_LEVELS)[keyof typeof Constants.EDUCATIONAL_LEVELS]>;
