@@ -34,8 +34,7 @@ const schoolSchema: Schema<SchoolInterface> = new Schema(
 			type: String,
 			required: true,
 			lowercase: true,
-			trim: true,
-			unique: true // Ensure email uniqueness
+			trim: true
 		},
 		contactNumber: {
 			type: String,
@@ -103,10 +102,13 @@ const schoolSchema: Schema<SchoolInterface> = new Schema(
 			ref: 'schoolBoards',
 			required: true
 		},
-		mediumOfInstruction: {
-			type: [ String ], // e.g., ['English', 'Hindi']
-			default: [ 'English' ]
-		},
+		mediumOfInstruction: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'schoolMediums',
+				required: true
+			}
+		],
 		schoolType: {
 			type: Number,
 			enum: [ ...Object.values(Constants.SCHOOL_TYPES) ],

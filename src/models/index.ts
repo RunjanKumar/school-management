@@ -4,5 +4,6 @@ import sessionModel from './sessionModel';
 import schoolOwnerModel from './schoolOwnerModel';
 import schoolModel from './schoolModel';
 import schoolBoardModel from './schoolBoardModel';
+import schoolMediumModel from './schoolMediumModel';
 
-export { adminModel, dbVersionModel, sessionModel, schoolOwnerModel, schoolModel, schoolBoardModel };
+export { adminModel, dbVersionModel, sessionModel, schoolOwnerModel, schoolModel, schoolBoardModel, schoolMediumModel };

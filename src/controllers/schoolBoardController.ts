@@ -158,7 +158,7 @@ async function deleteSchoolBoard(payload: any) {
 
 	await dbService.updateMany(schoolBoardModel, { _id: { $in: payload.schoolBoardIds } }, { isDeleted: true });
 
-	return createSuccessResponse(MESSAGES.SCHOOL_BOARD_DELETED);
+	return createSuccessResponse(payload.schoolBoardIds.length === 1 ? MESSAGES.SCHOOL_BOARD_DELETED : MESSAGES.SCHOOL_BOARDS_DELETED);
 }
 
 export const schoolBoardController = {

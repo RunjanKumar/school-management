@@ -47,5 +47,18 @@ export const MESSAGES = {
 	SCHOOL_BOARD_ALREADY_EXISTS: 'School board already exists.',
 	SCHOOL_BOARDS_FETCHED: 'School boards fetched successfully.',
 	SCHOOL_BOARD_IS_ASSOCIATED_WITH_SCHOOLS: 'School board is associated with schools.',
-	SCHOOL_BOARDS_ARE_ASSOCIATED_WITH_SCHOOLS: 'School boards are associated with schools.'
+	SCHOOL_BOARDS_ARE_ASSOCIATED_WITH_SCHOOLS: 'School boards are associated with schools.',
+	SCHOOL_BOARDS_DELETED: 'School boards deleted successfully.',
+
+	// school medium related messages
+	SCHOOL_MEDIUM_CREATED: 'School medium created successfully.',
+	SCHOOL_MEDIUM_UPDATED: 'School medium updated successfully.',
+	SCHOOL_MEDIUM_DELETED: 'School medium deleted successfully.',
+	SCHOOL_MEDIUM_NOT_FOUND: 'School medium not found.',
+	SCHOOL_MEDIUMS_NOT_FOUND: 'School mediums not found.',
+	SCHOOL_MEDIUM_ALREADY_EXISTS: 'School medium already exists.',
+	SCHOOL_MEDIUMS_FETCHED: 'School mediums fetched successfully.',
+	SCHOOL_MEDIUM_IS_ASSOCIATED_WITH_SCHOOLS: 'School medium is associated with schools.',
+	SCHOOL_MEDIUMS_ARE_ASSOCIATED_WITH_SCHOOLS: 'School mediums are associated with schools.',
+	SCHOOL_MEDIUMS_DELETED: 'School mediums deleted successfully.'
 };

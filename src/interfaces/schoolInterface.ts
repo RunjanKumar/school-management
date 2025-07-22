@@ -28,7 +28,7 @@ export interface SchoolInterface extends Document {
 		};
 	};
 	affiliatedSchoolBoard: Types.ObjectId;
-	mediumOfInstruction?: string[];
+	mediumOfInstruction: Types.ObjectId[];
 	schoolType: (typeof Constants.SCHOOL_TYPES)[keyof typeof Constants.SCHOOL_TYPES];
 	educationalLevels: Array<(typeof Constants.EDUCATIONAL_LEVELS)[keyof typeof Constants.EDUCATIONAL_LEVELS]>;
 	bannerImages?: string[];

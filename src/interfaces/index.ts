@@ -5,5 +5,6 @@ import { AuthenticatedRequestInterface } from './authenticatedRequestInterface';
 import { SchoolOwnerInterface } from './schoolOwnerInterface';
 import { SchoolInterface } from './schoolInterface';
 import { SchoolBoardInterface } from './schoolBoardInterface';
+import { SchoolMediumInterface } from './schoolMediumInterface';
 
-export { AdminInterface, DBVersionInterface, SessionInterface, AuthenticatedRequestInterface, SchoolOwnerInterface, SchoolInterface, SchoolBoardInterface };
+export { AdminInterface, DBVersionInterface, SessionInterface, AuthenticatedRequestInterface, SchoolOwnerInterface, SchoolInterface, SchoolBoardInterface, SchoolMediumInterface };

@@ -1,6 +1,6 @@
 import { Constants } from '../commons/constants';
 import { MESSAGES } from '../commons/message';
-import { schoolModel, schoolBoardModel } from '../models';
+import { schoolModel, schoolBoardModel, schoolMediumModel } from '../models';
 import dbService from '../services/databaseService';
 import { createErrorResponse, createSuccessResponse } from '../commons/responseHelpers';
 
@@ -23,9 +23,18 @@ async function createSchool(payload: any) {
 		_id: payload.affiliatedSchoolBoard,
 		isDeleted: false
 	});
-
 	if (!schoolBoard) {
 		throw createErrorResponse(MESSAGES.SCHOOL_BOARD_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+	}
+
+	// Validate mediumOfInstruction
+	const mediums = await dbService.find(schoolMediumModel, {
+		_id: { $in: payload.mediumOfInstruction },
+		isDeleted: false
+	});
+
+	if (mediums.length !== payload.mediumOfInstruction.length) {
+		throw createErrorResponse(payload.mediumOfInstruction.length === 1 ? MESSAGES.SCHOOL_MEDIUM_NOT_FOUND : MESSAGES.SCHOOL_MEDIUMS_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
 	const schoolData = {
@@ -64,27 +73,37 @@ async function createSchool(payload: any) {
  * @throws {Object} Error response if school update fails or school not found
  */
 async function updateSchool(payload: any) {
-	// Step 1: Check if the school exists
 	const existingSchool = await dbService.findOne(schoolModel, { _id: payload.schoolId });
 	if (!existingSchool) {
 		throw createErrorResponse(MESSAGES.SCHOOL_NOT_FOUND, Constants.ERROR_TYPES.DATA_NOT_FOUND);
 	}
-
-	// Step 2: Build update data object
 	const updateToData: any = {};
 
+	// Validate affiliatedSchoolBoard
 	if (payload.hasOwnProperty('affiliatedSchoolBoard') && String(payload.affiliatedSchoolBoard) !== String(existingSchool.affiliatedSchoolBoard)) {
 		const schoolBoard = await dbService.findOne(schoolBoardModel, {
 			_id: payload.affiliatedSchoolBoard,
 			isDeleted: false
 		});
-
 		if (!schoolBoard) {
 			throw createErrorResponse(MESSAGES.SCHOOL_BOARD_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 		}
 		updateToData.affiliatedSchoolBoard = payload.affiliatedSchoolBoard;
 	}
 
+	// Validate mediumOfInstruction
+	if (payload.hasOwnProperty('mediumOfInstruction')) {
+		const mediums = await dbService.find(schoolMediumModel, {
+			_id: { $in: payload.mediumOfInstruction },
+			isDeleted: false
+		});
+
+		if (mediums.length !== payload.mediumOfInstruction.length) {
+			throw createErrorResponse(payload.mediumOfInstruction.length === 1 ? MESSAGES.SCHOOL_MEDIUM_NOT_FOUND : MESSAGES.SCHOOL_MEDIUMS_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+		}
+
+		updateToData.mediumOfInstruction = payload.mediumOfInstruction;
+	}
 	if (payload.hasOwnProperty('name')) updateToData.name = payload.name;
 	if (payload.hasOwnProperty('shortName')) updateToData.shortName = payload.shortName;
 	if (payload.hasOwnProperty('logo')) updateToData.logo = payload.logo;
@@ -94,11 +113,10 @@ async function updateSchool(payload: any) {
 	if (payload.hasOwnProperty('contactNumber')) updateToData.contactNumber = payload.contactNumber;
 	if (payload.hasOwnProperty('website')) updateToData.website = payload.website;
 	if (payload.hasOwnProperty('address')) updateToData.address = payload.address;
-	if (payload.hasOwnProperty('mediumOfInstruction')) updateToData.mediumOfInstruction = payload.mediumOfInstruction;
 	if (payload.hasOwnProperty('schoolType')) updateToData.schoolType = payload.schoolType;
 	if (payload.hasOwnProperty('educationalLevels')) updateToData.educationalLevels = payload.educationalLevels;
 	if (payload.hasOwnProperty('bannerImages')) updateToData.bannerImages = payload.bannerImages;
-	// Step 3: Perform the update
+
 	await dbService.updateOne(schoolModel, { _id: payload.schoolId }, { $set: updateToData });
 
 	return createSuccessResponse(MESSAGES.SCHOOL_UPDATED);
@@ -133,25 +151,33 @@ async function getSchools(payload: any) {
 		{ $match: matchCriteria },
 		{ $addFields: { studentsCount: 550, staffCount: 85, monthlyCost: 55000 } },
 		{
-			$lookup: {
-				from: 'schoolBoards',
-				localField: 'affiliatedSchoolBoard',
-				foreignField: '_id',
-				as: 'affiliatedSchoolBoard'
-			}
-		},
-		{
-			$unwind: {
-				path: '$affiliatedSchoolBoard',
-				preserveNullAndEmptyArrays: true
-			}
-		},
-		{
 			$facet: {
 				data: [
 					{ $sort: { [payload.sortKey]: payload.sortOrder } },
 					{ $skip: payload.skip },
 					{ $limit: payload.limit },
+					{
+						$lookup: {
+							from: 'schoolBoards',
+							localField: 'affiliatedSchoolBoard',
+							foreignField: '_id',
+							as: 'affiliatedSchoolBoard'
+						}
+					},
+					{
+						$unwind: {
+							path: '$affiliatedSchoolBoard',
+							preserveNullAndEmptyArrays: true
+						}
+					},
+					{
+						$lookup: {
+							from: 'schoolMediums',
+							localField: 'mediumOfInstruction',
+							foreignField: '_id',
+							as: 'mediumOfInstruction'
+						}
+					},
 					{
 						$project: {
 							_id: 1,
@@ -166,7 +192,8 @@ async function getSchools(payload: any) {
 							address: 1,
 							'affiliatedSchoolBoard._id': 1,
 							'affiliatedSchoolBoard.name': 1,
-							mediumOfInstruction: 1,
+							'mediumOfInstruction._id': 1,
+							'mediumOfInstruction.name': 1,
 							schoolType: 1,
 							educationalLevels: 1,
 							bannerImages: 1,
