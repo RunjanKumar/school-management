@@ -114,11 +114,13 @@ const schoolSchema: Schema<SchoolInterface> = new Schema(
 			enum: [ ...Object.values(Constants.SCHOOL_TYPES) ],
 			default: Constants.SCHOOL_TYPES.OTHER
 		},
-		educationalLevels: {
-			type: [ Number ],
-			enum: [ ...Object.values(Constants.EDUCATIONAL_LEVELS) ], // More granular levels
-			required: true
-		},
+		educationalLevels: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'schoolEducationLevels',
+				required: true
+			}
+		],
 		bannerImages: [
 			{
 				type: String, // URLs to banner images

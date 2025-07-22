@@ -60,5 +60,17 @@ export const MESSAGES = {
 	SCHOOL_MEDIUMS_FETCHED: 'School mediums fetched successfully.',
 	SCHOOL_MEDIUM_IS_ASSOCIATED_WITH_SCHOOLS: 'School medium is associated with schools.',
 	SCHOOL_MEDIUMS_ARE_ASSOCIATED_WITH_SCHOOLS: 'School mediums are associated with schools.',
-	SCHOOL_MEDIUMS_DELETED: 'School mediums deleted successfully.'
+	SCHOOL_MEDIUMS_DELETED: 'School mediums deleted successfully.',
+
+	// school education level related messages
+	SCHOOL_EDUCATION_LEVEL_CREATED: 'School education level created successfully.',
+	SCHOOL_EDUCATION_LEVEL_UPDATED: 'School education level updated successfully.',
+	SCHOOL_EDUCATION_LEVEL_DELETED: 'School education level deleted successfully.',
+	SCHOOL_EDUCATION_LEVEL_NOT_FOUND: 'School education level not found.',
+	SCHOOL_EDUCATION_LEVELS_NOT_FOUND: 'School education levels not found.',
+	SCHOOL_EDUCATION_LEVEL_ALREADY_EXISTS: 'School education level already exists.',
+	SCHOOL_EDUCATION_LEVELS_FETCHED: 'School education levels fetched successfully.',
+	SCHOOL_EDUCATION_LEVEL_IS_ASSOCIATED_WITH_SCHOOLS: 'School education level is associated with schools.',
+	SCHOOL_EDUCATION_LEVELS_ARE_ASSOCIATED_WITH_SCHOOLS: 'School education levels are associated with schools.',
+	SCHOOL_EDUCATION_LEVELS_DELETED: 'School education levels deleted successfully.'
 };

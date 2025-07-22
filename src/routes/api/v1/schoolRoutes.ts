@@ -52,10 +52,7 @@ const routes: any = [
 					.default(Constants.SCHOOL_TYPES.OTHER)
 					.optional()
 					.description('Type of school'),
-				educationalLevels: Joi.array()
-					.items(Joi.number().valid(...Object.values(Constants.EDUCATIONAL_LEVELS)))
-					.required()
-					.description('Educational levels offered by the school'),
+				educationalLevels: Joi.array().items(Joi.string().mongoId()).required().description('Educational levels offered by the school'),
 				bannerImages: Joi.array().items(Joi.string().uri()).optional().description('URLs to banner images of the school')
 			},
 			group: 'School',
@@ -111,10 +108,7 @@ const routes: any = [
 					.default(Constants.SCHOOL_TYPES.OTHER)
 					.optional()
 					.description('Type of school'),
-				educationalLevels: Joi.array()
-					.items(Joi.number().valid(...Object.values(Constants.EDUCATIONAL_LEVELS)))
-					.required()
-					.description('Educational levels offered by the school'),
+				educationalLevels: Joi.array().items(Joi.string().mongoId()).required().description('Educational levels offered by the school'),
 				bannerImages: Joi.array().items(Joi.string().uri()).optional().description('URLs to banner images of the school')
 			},
 			group: 'School',

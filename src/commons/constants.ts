@@ -248,33 +248,12 @@ const SUBSCRIPTION_PLAN_TYPE = {
 	ENTERPRISE: 3
 };
 
-const SCHOOL_AFFILIATION_TYPES = {
-	CBSE: 1,
-	ICSE: 2,
-	STATE_BOARD: 3,
-	IB: 4,
-	CAMBRIDGE: 5,
-	OTHER: 99 // Using a higher number for 'Other' or a specific range for custom types
-};
-
 const SCHOOL_TYPES = {
 	PUBLIC: 1,
 	PRIVATE: 2,
 	GOVERNMENT_AIDED: 3,
 	INTERNATIONAL: 4,
 	OTHER: 99
-};
-
-const EDUCATIONAL_LEVELS = {
-	PLAYWAY: 1,
-	NURSERY: 2,
-	KG: 3,
-	PRIMARY: 4,
-	MIDDLE: 5,
-	SECONDARY: 6,
-	HIGH_SCHOOL: 7,
-	HIGHER_SECONDARY: 8,
-	OTHER: 99 // Using a higher number for 'Other' or a specific range for custom levels
 };
 
 const SCHOOL_STATUSES = {
@@ -294,8 +273,6 @@ const SCHOOL_BOARD_TYPES = {
 };
 
 export const Constants = {
-	SCHOOL_AFFILIATION_TYPES,
-	EDUCATIONAL_LEVELS,
 	SCHOOL_TYPES,
 	SCHOOL_STATUSES,
 	ERROR_TYPES,

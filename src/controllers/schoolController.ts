@@ -1,6 +1,6 @@
 import { Constants } from '../commons/constants';
 import { MESSAGES } from '../commons/message';
-import { schoolModel, schoolBoardModel, schoolMediumModel } from '../models';
+import { schoolModel, schoolBoardModel, schoolMediumModel, schoolEducationLevelModel } from '../models';
 import dbService from '../services/databaseService';
 import { createErrorResponse, createSuccessResponse } from '../commons/responseHelpers';
 
@@ -32,9 +32,17 @@ async function createSchool(payload: any) {
 		_id: { $in: payload.mediumOfInstruction },
 		isDeleted: false
 	});
-
 	if (mediums.length !== payload.mediumOfInstruction.length) {
 		throw createErrorResponse(payload.mediumOfInstruction.length === 1 ? MESSAGES.SCHOOL_MEDIUM_NOT_FOUND : MESSAGES.SCHOOL_MEDIUMS_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+	}
+
+	// Validate educationalLevels
+	const levels = await dbService.find(schoolEducationLevelModel, {
+		_id: { $in: payload.educationalLevels },
+		isDeleted: false
+	});
+	if (levels.length !== payload.educationalLevels.length) {
+		throw createErrorResponse(payload.educationalLevels.length === 1 ? MESSAGES.SCHOOL_EDUCATION_LEVEL_NOT_FOUND : MESSAGES.SCHOOL_EDUCATION_LEVELS_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
 	const schoolData = {
@@ -49,8 +57,8 @@ async function createSchool(payload: any) {
 		address: payload.address,
 		affiliatedSchoolBoard: payload.affiliatedSchoolBoard,
 		mediumOfInstruction: payload.mediumOfInstruction,
-		schoolType: payload.schoolType,
 		educationalLevels: payload.educationalLevels,
+		schoolType: payload.schoolType,
 		bannerImages: payload.bannerImages,
 		schoolOwnerId: payload.schoolOwner._id
 	};
@@ -97,13 +105,24 @@ async function updateSchool(payload: any) {
 			_id: { $in: payload.mediumOfInstruction },
 			isDeleted: false
 		});
-
 		if (mediums.length !== payload.mediumOfInstruction.length) {
 			throw createErrorResponse(payload.mediumOfInstruction.length === 1 ? MESSAGES.SCHOOL_MEDIUM_NOT_FOUND : MESSAGES.SCHOOL_MEDIUMS_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 		}
-
 		updateToData.mediumOfInstruction = payload.mediumOfInstruction;
 	}
+
+	// Validate educationalLevels
+	if (payload.hasOwnProperty('educationalLevels')) {
+		const levels = await dbService.find(schoolEducationLevelModel, {
+			_id: { $in: payload.educationalLevels },
+			isDeleted: false
+		});
+		if (levels.length !== payload.educationalLevels.length) {
+			throw createErrorResponse(payload.educationalLevels.length === 1 ? MESSAGES.SCHOOL_EDUCATION_LEVEL_NOT_FOUND : MESSAGES.SCHOOL_EDUCATION_LEVELS_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+		}
+		updateToData.educationalLevels = payload.educationalLevels;
+	}
+
 	if (payload.hasOwnProperty('name')) updateToData.name = payload.name;
 	if (payload.hasOwnProperty('shortName')) updateToData.shortName = payload.shortName;
 	if (payload.hasOwnProperty('logo')) updateToData.logo = payload.logo;
@@ -114,7 +133,6 @@ async function updateSchool(payload: any) {
 	if (payload.hasOwnProperty('website')) updateToData.website = payload.website;
 	if (payload.hasOwnProperty('address')) updateToData.address = payload.address;
 	if (payload.hasOwnProperty('schoolType')) updateToData.schoolType = payload.schoolType;
-	if (payload.hasOwnProperty('educationalLevels')) updateToData.educationalLevels = payload.educationalLevels;
 	if (payload.hasOwnProperty('bannerImages')) updateToData.bannerImages = payload.bannerImages;
 
 	await dbService.updateOne(schoolModel, { _id: payload.schoolId }, { $set: updateToData });
@@ -179,6 +197,14 @@ async function getSchools(payload: any) {
 						}
 					},
 					{
+						$lookup: {
+							from: 'schoolEducationLevels',
+							localField: 'educationalLevels',
+							foreignField: '_id',
+							as: 'educationalLevels'
+						}
+					},
+					{
 						$project: {
 							_id: 1,
 							name: 1,
@@ -195,7 +221,8 @@ async function getSchools(payload: any) {
 							'mediumOfInstruction._id': 1,
 							'mediumOfInstruction.name': 1,
 							schoolType: 1,
-							educationalLevels: 1,
+							'educationalLevels._id': 1,
+							'educationalLevels.name': 1,
 							bannerImages: 1,
 							studentsCount: 1,
 							staffCount: 1,

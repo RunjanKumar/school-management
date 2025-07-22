@@ -30,7 +30,7 @@ export interface SchoolInterface extends Document {
 	affiliatedSchoolBoard: Types.ObjectId;
 	mediumOfInstruction: Types.ObjectId[];
 	schoolType: (typeof Constants.SCHOOL_TYPES)[keyof typeof Constants.SCHOOL_TYPES];
-	educationalLevels: Array<(typeof Constants.EDUCATIONAL_LEVELS)[keyof typeof Constants.EDUCATIONAL_LEVELS]>;
+	educationalLevels: Types.ObjectId[];
 	bannerImages?: string[];
 	schoolOwnerId: Types.ObjectId;
 	status: (typeof Constants.SCHOOL_STATUSES)[keyof typeof Constants.SCHOOL_STATUSES];
