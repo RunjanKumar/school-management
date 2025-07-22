@@ -1,0 +1,10 @@
+[
+	{ "name": "CBSE", "type": 1 },
+	{ "name": "ICSE", "type": 1 },
+	{ "name": "Punjab Board", "type": 2 },
+	{ "name": "Maharashtra State Board", "type": 2 },
+	{ "name": "UP Board", "type": 2 },
+	{ "name": "Bihar Board", "type": 2 },
+	{ "name": "International Baccalaureate", "type": 5 },
+	{ "name": "Cambridge", "type": 5 }
+]

@@ -41,7 +41,8 @@ const EMAIL_TYPES = {
 };
 
 const DATABASE_VERSIONS = {
-	ONE: 1
+	ONE: 1,
+	TWO: 2
 };
 
 const GENDERS = {
