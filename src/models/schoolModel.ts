@@ -24,9 +24,7 @@ const schoolSchema: Schema<SchoolInterface> = new Schema(
 		},
 		establishedYear: {
 			type: Number,
-			min: 1800, // Assuming schools weren't established before this
-			max: new Date().getFullYear(), // Cannot be in the future
-			required: false // Made optional as it might not always be known
+			min: 1800
 		},
 
 		// Contact Information

@@ -63,7 +63,7 @@ async function updateSchool(payload: any) {
 	}
 
 	// Step 2: Build update data object
-	const updateToData: any = {};
+	const updateToData: Record<string, string | number | number[]> = {};
 
 	if (payload.hasOwnProperty('name')) updateToData.name = payload.name;
 	if (payload.hasOwnProperty('shortName')) updateToData.shortName = payload.shortName;
@@ -80,7 +80,7 @@ async function updateSchool(payload: any) {
 	if (payload.hasOwnProperty('schoolType')) updateToData.schoolType = payload.schoolType;
 	if (payload.hasOwnProperty('educationalLevels')) updateToData.educationalLevels = payload.educationalLevels;
 	if (payload.hasOwnProperty('bannerImages')) updateToData.bannerImages = payload.bannerImages;
-	console.log('Update data for school:', updateToData);
+
 	// Step 3: Perform the update
 	await dbService.updateOne(schoolModel, { _id: payload.schoolId }, { $set: updateToData });
 

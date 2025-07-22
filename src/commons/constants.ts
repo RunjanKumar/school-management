@@ -318,9 +318,8 @@ const EDUCATIONAL_LEVELS = {
 const SCHOOL_STATUSES = {
 	ACTIVE: 1,
 	INACTIVE: 2,
-	PENDING: 3,
-	SUSPENDED: 4,
-	ARCHIVED: 5
+	SUSPENDED: 3,
+	ARCHIVED: 4
 };
 
 export const Constants = {

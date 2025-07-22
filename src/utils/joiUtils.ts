@@ -58,7 +58,8 @@ joiUtils.Joi = joiUtils.Joi.extend((joi: any) => ({
 	messages: {
 		'date.dateOnly': '{{#label}} must contain only date.',
 		'date.timeMustBeGreaterToday': '{{#label}} must be greater than today.',
-		'date.invalid': '{{#label}} is invalid.'
+		'date.invalid': '{{#label}} is invalid.',
+		'date.yearNotInFuture': '{{#label}} must not be in a future year.'
 	},
 	rules: {
 		dateOnly: {
@@ -94,6 +95,23 @@ joiUtils.Joi = joiUtils.Joi.extend((joi: any) => ({
 				if (!parsedDate.isValid()) {
 					return helpers.error('date.dateOnly');
 				}
+				return parsedDate.endOf('day').toDate();
+			}
+		},
+		maxCurrentYear: {
+			validate(value: any, helpers: any) {
+				const parsedDate = moment(value);
+				if (!parsedDate.isValid()) {
+					return helpers.error('date.invalid');
+				}
+
+				const inputYear = parsedDate.year();
+				const currentYear = moment().year();
+
+				if (inputYear > currentYear) {
+					return helpers.error('date.yearNotInFuture'); // You can define a better custom error message
+				}
+
 				return parsedDate.endOf('day').toDate();
 			}
 		}
