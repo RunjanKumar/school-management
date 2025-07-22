@@ -138,7 +138,7 @@ async function deleteSchoolEducationLevel(payload: any) {
 		throw createErrorResponse(MESSAGES.SCHOOL_EDUCATION_LEVEL_IS_ASSOCIATED_WITH_SCHOOLS, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
-	await dbService.updateMany(schoolEducationLevelModel, { _id: { $in: payload.schoolEducationLevelIds } }, { isDeleted: true });
+	await dbService.updateMany(schoolEducationLevelModel, { _id: { $in: payload.schoolEducationLevelIds } }, { $set: { isDeleted: true } });
 
 	return createSuccessResponse(payload.schoolEducationLevelIds.length === 1 ? MESSAGES.SCHOOL_EDUCATION_LEVEL_DELETED : MESSAGES.SCHOOL_EDUCATION_LEVELS_DELETED);
 }
