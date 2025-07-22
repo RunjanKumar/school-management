@@ -85,7 +85,8 @@ async function updateSchool(payload: any) {
 	if (!existingSchool) {
 		throw createErrorResponse(MESSAGES.SCHOOL_NOT_FOUND, Constants.ERROR_TYPES.DATA_NOT_FOUND);
 	}
-	const updateToData: any = {};
+
+	const updateToData: Record<string, string | number | number[]> = {};
 
 	// Validate affiliatedSchoolBoard
 	if (payload.hasOwnProperty('affiliatedSchoolBoard') && String(payload.affiliatedSchoolBoard) !== String(existingSchool.affiliatedSchoolBoard)) {

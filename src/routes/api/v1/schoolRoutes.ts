@@ -17,7 +17,7 @@ const routes: any = [
 				shortName: Joi.string().optional().description('Short name or abbreviation of the school'),
 				logo: Joi.string().uri().optional().description('URL to the school\'s logo'),
 				description: Joi.string().optional().description('A brief description of the school'),
-				establishedYear: Joi.number().min(1800).max(new Date().getFullYear()).optional().description('Year the school was established'),
+				establishedYear: Joi.number().min(1800).maxCurrentYear().optional().description('Year the school was established'),
 
 				email: Joi.string().email().lowercase().required().description('Email of the school'),
 				contactNumber: Joi.string().required().description('Contact number of the school'),
@@ -75,7 +75,7 @@ const routes: any = [
 				shortName: Joi.string().optional().description('Short name or abbreviation of the school'),
 				logo: Joi.string().uri().optional().description('URL to the school\'s logo'),
 				description: Joi.string().optional().description('A brief description of the school'),
-				establishedYear: Joi.number().min(1800).max(new Date().getFullYear()).optional().description('Year the school was established'),
+				establishedYear: Joi.number().min(1800).maxCurrentYear().optional().description('Year the school was established'),
 
 				email: Joi.string().email().lowercase().required().description('Email of the school'),
 				contactNumber: Joi.string().phoneNumber().required().description('Contact number of the school'),
