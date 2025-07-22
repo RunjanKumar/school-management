@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import moment from 'moment';
 import mongoose from 'mongoose';
+import { MESSAGES } from '../commons/message';
 import { Constants } from '../commons/constants';
 
 const joiUtils: any = {
@@ -9,8 +10,8 @@ const joiUtils: any = {
 		base: joi.string(),
 		messages: {
 			'string.objectId': '{{#label}} must be a valid id',
-			'string.phoneNumber': Constants.RESPONSE_MESSAGES.PHONE_NUMBER_VALIDATION_FAILED,
-			'string.password': Constants.RESPONSE_MESSAGES.PASSWORD_VALIDATION_FAILED
+			'string.phoneNumber': MESSAGES.PHONE_NUMBER_VALIDATION_FAILED,
+			'string.password': MESSAGES.PASSWORD_VALIDATION_FAILED
 		},
 		rules: {
 			phoneNumber: {

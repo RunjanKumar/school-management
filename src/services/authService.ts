@@ -5,6 +5,7 @@ import { Constants } from '../commons/constants';
 import { Utils } from '../utils/utils';
 import dbService from './databaseService';
 import * as Models from '../models';
+import { MESSAGES } from '../commons/message';
 
 const authService: any = {};
 
@@ -43,11 +44,11 @@ authService.adminValidate = () => {
 					return next();
 				}
 
-				const responseObject = createErrorResponse(Constants.RESPONSE_MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
+				const responseObject = createErrorResponse(MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
 				return response.status(responseObject.statusCode).json(responseObject);
 			})
 			.catch(() => {
-				const responseObject = createErrorResponse(Constants.RESPONSE_MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
+				const responseObject = createErrorResponse(MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
 				return response.status(responseObject.statusCode).json(responseObject);
 			});
 	};
@@ -66,11 +67,11 @@ authService.adminForgotPasswordValidate = () => {
 					return next();
 				}
 
-				const responseObject = createErrorResponse(Constants.RESPONSE_MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
+				const responseObject = createErrorResponse(MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
 				return response.status(responseObject.statusCode).json(responseObject);
 			})
 			.catch(() => {
-				const responseObject = createErrorResponse(Constants.RESPONSE_MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
+				const responseObject = createErrorResponse(MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
 				return response.status(responseObject.statusCode).json(responseObject);
 			});
 	};
@@ -89,11 +90,11 @@ authService.schoolOwnerValidate = (allowWithoutSetPassword: boolean = false) => 
 					return next();
 				}
 
-				const responseObject = createErrorResponse(Constants.RESPONSE_MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
+				const responseObject = createErrorResponse(MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
 				return response.status(responseObject.statusCode).json(responseObject);
 			})
 			.catch(() => {
-				const responseObject = createErrorResponse(Constants.RESPONSE_MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
+				const responseObject = createErrorResponse(MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
 				return response.status(responseObject.statusCode).json(responseObject);
 			});
 	};
@@ -112,11 +113,11 @@ authService.schoolOwnerForgotPasswordValidate = () => {
 					return next();
 				}
 
-				const responseObject = createErrorResponse(Constants.RESPONSE_MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
+				const responseObject = createErrorResponse(MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
 				return response.status(responseObject.statusCode).json(responseObject);
 			})
 			.catch(() => {
-				const responseObject = createErrorResponse(Constants.RESPONSE_MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
+				const responseObject = createErrorResponse(MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
 				return response.status(responseObject.statusCode).json(responseObject);
 			});
 	};
