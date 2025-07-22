@@ -1,6 +1,5 @@
 import { Document, Types } from 'mongoose';
-// Correctly import the 'Constants' object which holds your enums
-import { Constants } from '../../src/commons/constants';
+import { Constants } from '../commons/constants';
 
 export interface SchoolInterface extends Document {
 	_id: Types.ObjectId;

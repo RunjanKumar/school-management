@@ -143,9 +143,9 @@ const schoolSchema: Schema<SchoolInterface> = new Schema(
 		}
 	},
 	{
-		timestamps: true, // Adds createdAt and updatedAt
-		versionKey: false, // Disables __v field
-		collection: 'schools' // Explicitly sets collection name
+		timestamps: true,
+		versionKey: false,
+		collection: 'schools'
 	}
 );
 
