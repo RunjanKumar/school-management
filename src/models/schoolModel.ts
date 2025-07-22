@@ -134,8 +134,8 @@ const schoolSchema: Schema<SchoolInterface> = new Schema(
 		},
 		status: {
 			type: Number,
-			enum: [ ...Object.values(Constants.SCHOOL_STATUSES) ],
-			default: Constants.SCHOOL_STATUSES.ACTIVE
+			enum: [ ...Object.values(Constants.SCHOOL_STATUS) ],
+			default: Constants.SCHOOL_STATUS.ACTIVE
 		},
 		isDeleted: {
 			type: Boolean,

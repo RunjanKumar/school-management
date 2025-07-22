@@ -33,6 +33,6 @@ export interface SchoolInterface extends Document {
 	educationalLevels: Types.ObjectId[];
 	bannerImages?: string[];
 	schoolOwnerId: Types.ObjectId;
-	status: (typeof Constants.SCHOOL_STATUSES)[keyof typeof Constants.SCHOOL_STATUSES];
+	status: (typeof Constants.SCHOOL_STATUS)[keyof typeof Constants.SCHOOL_STATUS];
 	isDeleted: boolean;
 }
