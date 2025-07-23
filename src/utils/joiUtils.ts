@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import moment from 'moment';
 import mongoose from 'mongoose';
+import { MESSAGES } from '../commons/message';
 import { Constants } from '../commons/constants';
 
 const joiUtils: any = {
@@ -9,8 +10,8 @@ const joiUtils: any = {
 		base: joi.string(),
 		messages: {
 			'string.objectId': '{{#label}} must be a valid id',
-			'string.phoneNumber': Constants.RESPONSE_MESSAGES.PHONE_NUMBER_VALIDATION_FAILED,
-			'string.password': Constants.RESPONSE_MESSAGES.PASSWORD_VALIDATION_FAILED
+			'string.phoneNumber': MESSAGES.PHONE_NUMBER_VALIDATION_FAILED,
+			'string.password': MESSAGES.PASSWORD_VALIDATION_FAILED
 		},
 		rules: {
 			phoneNumber: {
@@ -58,8 +59,7 @@ joiUtils.Joi = joiUtils.Joi.extend((joi: any) => ({
 	messages: {
 		'date.dateOnly': '{{#label}} must contain only date.',
 		'date.timeMustBeGreaterToday': '{{#label}} must be greater than today.',
-		'date.invalid': '{{#label}} is invalid.',
-		'date.yearNotInFuture': '{{#label}} must not be in a future year.'
+		'date.invalid': '{{#label}} is invalid.'
 	},
 	rules: {
 		dateOnly: {
@@ -97,22 +97,23 @@ joiUtils.Joi = joiUtils.Joi.extend((joi: any) => ({
 				}
 				return parsedDate.endOf('day').toDate();
 			}
-		},
-		maxCurrentYear: {
+		}
+	}
+}));
+
+joiUtils.Joi = joiUtils.Joi.extend((joi: any) => ({
+	type: 'number',
+	base: joi.number(),
+	messages: {
+		'number.yearNotInFuture': '{{#label}} must not be in a future year.'
+	},
+	rules: {
+		yearNotInFuture: {
 			validate(value: any, helpers: any) {
-				const parsedDate = moment(value);
-				if (!parsedDate.isValid()) {
-					return helpers.error('date.invalid');
+				if (value > new Date().getFullYear()) {
+					return helpers.error('number.yearNotInFuture');
 				}
-
-				const inputYear = parsedDate.year();
-				const currentYear = moment().year();
-
-				if (inputYear > currentYear) {
-					return helpers.error('date.yearNotInFuture'); // You can define a better custom error message
-				}
-
-				return parsedDate.endOf('day').toDate();
+				return value;
 			}
 		}
 	}

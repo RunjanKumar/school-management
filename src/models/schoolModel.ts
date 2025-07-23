@@ -32,8 +32,7 @@ const schoolSchema: Schema<SchoolInterface> = new Schema(
 			type: String,
 			required: true,
 			lowercase: true,
-			trim: true,
-			unique: true // Ensure email uniqueness
+			trim: true
 		},
 		contactNumber: {
 			type: String,
@@ -96,29 +95,30 @@ const schoolSchema: Schema<SchoolInterface> = new Schema(
 		},
 
 		// School Specifics
-		affiliation: {
-			type: Number,
-			enum: [ ...Object.values(Constants.SCHOOL_AFFILIATION_TYPES) ],
-			default: Constants.SCHOOL_AFFILIATION_TYPES.OTHER
+		affiliatedSchoolBoard: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'schoolBoards',
+			required: true
 		},
-		board: {
-			type: String,
-			trim: true // Applicable if affiliation is 'Other' or more specific board details are needed
-		},
-		mediumOfInstruction: {
-			type: [ String ], // e.g., ['English', 'Hindi']
-			default: [ 'English' ]
-		},
+		mediumOfInstruction: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'schoolMediums',
+				required: true
+			}
+		],
 		schoolType: {
 			type: Number,
 			enum: [ ...Object.values(Constants.SCHOOL_TYPES) ],
 			default: Constants.SCHOOL_TYPES.OTHER
 		},
-		educationalLevels: {
-			type: [ Number ],
-			enum: [ ...Object.values(Constants.EDUCATIONAL_LEVELS) ], // More granular levels
-			required: true
-		},
+		educationalLevels: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'schoolEducationLevels',
+				required: true
+			}
+		],
 		bannerImages: [
 			{
 				type: String, // URLs to banner images
@@ -134,8 +134,8 @@ const schoolSchema: Schema<SchoolInterface> = new Schema(
 		},
 		status: {
 			type: Number,
-			enum: [ ...Object.values(Constants.SCHOOL_STATUSES) ],
-			default: Constants.SCHOOL_STATUSES.ACTIVE
+			enum: [ ...Object.values(Constants.SCHOOL_STATUS) ],
+			default: Constants.SCHOOL_STATUS.ACTIVE
 		},
 		isDeleted: {
 			type: Boolean,
@@ -143,9 +143,9 @@ const schoolSchema: Schema<SchoolInterface> = new Schema(
 		}
 	},
 	{
-		timestamps: true, // Adds createdAt and updatedAt
-		versionKey: false, // Disables __v field
-		collection: 'schools' // Explicitly sets collection name
+		timestamps: true,
+		versionKey: false,
+		collection: 'schools'
 	}
 );
 

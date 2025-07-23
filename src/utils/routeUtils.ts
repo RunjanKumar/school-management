@@ -12,6 +12,7 @@ import swaggerUI from 'swagger-ui-express';
 import basicAuth from 'express-basic-auth';
 import { SWAGGER } from '../config/swaggerConfig';
 import rateLimitService from '../services/rateLimitService';
+import { MESSAGES } from '../commons/message';
 
 const SWAGGER_AUTH = config.SWAGGER_AUTH;
 const uploadMiddleware = multer({
@@ -24,13 +25,13 @@ const uploadMiddleware = multer({
 		if (allowedMimeTypes.includes(file.mimetype)) {
 			cb(null, true);
 		} else {
-			cb(new Error(Constants.RESPONSE_MESSAGES.FILE_UPLOAD_TYPE_ERROR));
+			cb(new Error(MESSAGES.FILE_UPLOAD_TYPE_ERROR));
 		}
 	}
 });
 
 const multerErrorHandler: any = (err: Error, req: Request, res: Response, next: NextFunction) => {
-	if (err instanceof multer.MulterError || err?.message?.includes(Constants.RESPONSE_MESSAGES.FILE_UPLOAD_TYPE_ERROR)) {
+	if (err instanceof multer.MulterError || err?.message?.includes(MESSAGES.FILE_UPLOAD_TYPE_ERROR)) {
 		const responseObject = createErrorResponse(err.message || 'File upload error', Constants.ERROR_TYPES.BAD_REQUEST);
 		return res.status(responseObject.statusCode).json(responseObject);
 	}
@@ -148,7 +149,7 @@ const getHandlerMethod = (route: any) => {
 			?.catch((err: any) => {
 				if (!err.statusCode && !err.status) {
 					console.log('[INTERNAL_SERVER_ERROR]', err);
-					err = createErrorResponse(Constants.RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR, Constants.ERROR_TYPES.INTERNAL_SERVER_ERROR);
+					err = createErrorResponse(MESSAGES.INTERNAL_SERVER_ERROR, Constants.ERROR_TYPES.INTERNAL_SERVER_ERROR);
 				}
 				response.status(err.statusCode).json(err);
 			});
