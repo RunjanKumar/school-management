@@ -1,45 +1,6 @@
 import path from 'path';
 import fs from 'fs';
 
-const RESPONSE_MESSAGES = {
-	UNAUTHORIZED: 'You are not authorized to perform this action.',
-	ADMIN_NOT_FOUND: 'Admin not found.',
-	ADMIN_PROFILE_FETCHED: 'Admin profile fetched successfully.',
-	USER_ALREADY_EXISTS: 'A user with this email already exists.',
-	INVALID_EMAIL_OR_PASSWORD: 'Invalid email or password.',
-	LOGIN_SUCCESSFUL: 'You have logged in successfully.',
-	LOGOUT_SUCCESSFUL: 'You have logged out successfully.',
-	INTERNAL_SERVER_ERROR: 'An unexpected error occurred. Please try again later.',
-	FORGOT_PASSWORD_MAIL_SENT: 'Forgot password mail sent successfully.',
-	PASSWORD_RESET: 'Password reset successfully.',
-	PASSWORD_VALIDATION_FAILED: 'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character and be at least 8 characters long.',
-	FILE_UPLOAD_TYPE_ERROR: 'Invalid file type. Please upload a valid file.',
-	TOO_MANY_REQUESTS: 'Too many requests. Please try again later.',
-	EMAIL_ALREADY_IN_USE: 'Email already in use.',
-	SCHOOL_OWNER_CREATED: 'School owner created successfully.',
-	SCHOOL_OWNER_NOT_FOUND: 'School owner not found.',
-	SCHOOL_OWNER_EMAIL_ALREADY_EXISTS: 'School owner email already exists.',
-	SCHOOL_OWNER_CONTACT_NUMBER_ALREADY_EXISTS: 'School owner contact number already exists.',
-	PHONE_NUMBER_VALIDATION_FAILED: '{{#label}} is not a valid phone number.',
-	SCHOOL_OWNERS_LISTED: 'School owners listed successfully.',
-	SCHOOL_OWNER_DETAILS_FETCHED: 'School owner details fetched successfully.',
-	SCHOOL_OWNER_UPDATED: 'School owner updated successfully.',
-	SCHOOL_OWNER_DELETED: 'School owner deleted successfully.',
-	SCHOOL_OWNERS_DELETED: 'School owners deleted successfully.',
-	SCHOOL_OWNERS_NOT_FOUND: 'School owners not found.',
-	PASSWORD_CHANGED: 'Password changed successfully.',
-	INVALID_PASSWORD: 'Invalid password.',
-	ACCOUNT_DETAILS_UPDATED: 'Account details updated successfully.',
-	PROFILE_DETAILS_FETCHED: 'Profile details fetched successfully.',
-	SCHOOL_CREATED: 'School created successfully.',
-	SCHOOLS_FETCHED: 'Schools fetched successfully.',
-	SCHOOLS_DELETED: 'Schools deleted successfully.',
-	SCHOOL_DELETED: 'School deleted successfully.',
-	SCHOOLS_NOT_FOUND: 'Schools not found.',
-	SCHOOL_NOT_FOUND: 'School not found.',
-	SCHOOL_UPDATED: 'School updated successfully.'
-};
-
 const ERROR_TYPES = {
 	INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR',
 	BAD_REQUEST: 'BAD_REQUEST',
@@ -80,7 +41,8 @@ const EMAIL_TYPES = {
 };
 
 const DATABASE_VERSIONS = {
-	ONE: 1
+	ONE: 1,
+	TWO: 2
 };
 
 const GENDERS = {
@@ -116,7 +78,8 @@ const AVAILABLE_AUTHS = {
 	ADMIN: 1,
 	ADMIN_FORGOT_PASSWORD: 2,
 	SCHOOL_OWNER: 3,
-	SCHOOL_OWNER_FORGOT_PASSWORD: 4
+	SCHOOL_OWNER_FORGOT_PASSWORD: 4,
+	ADMIN_AND_SCHOOL_OWNER: 5
 };
 
 const KYC_STATUS = {
@@ -286,8 +249,34 @@ const SUBSCRIPTION_PLAN_TYPE = {
 	ENTERPRISE: 3
 };
 
+const SCHOOL_TYPES = {
+	PUBLIC: 1,
+	PRIVATE: 2,
+	GOVERNMENT_AIDED: 3,
+	INTERNATIONAL: 4,
+	OTHER: 99
+};
+
+const SCHOOL_STATUS = {
+	ACTIVE: 1,
+	INACTIVE: 2,
+	SUSPENDED: 3,
+	ARCHIVED: 4
+};
+
+const USER_ROLE_PERMISSIONS = {};
+
+const SCHOOL_BOARD_TYPES = {
+	NATIONAL: 1,
+	STATE: 2,
+	PRIVATE: 3,
+	RELIGIOUS: 4,
+	INTERNATIONAL: 5
+};
+
 export const Constants = {
-	RESPONSE_MESSAGES,
+	SCHOOL_TYPES,
+	SCHOOL_STATUS,
 	ERROR_TYPES,
 	STATUS_CODES,
 	UPLOAD_FILE_TYPE,
@@ -327,5 +316,7 @@ export const Constants = {
 	NOTIFICATION_AVAILABILITY,
 	BROWSER_TYPE,
 	SUBSCRIPTION_STATUS,
-	SUBSCRIPTION_PLAN_TYPE
+	SUBSCRIPTION_PLAN_TYPE,
+	SCHOOL_BOARD_TYPES,
+	USER_ROLE_PERMISSIONS
 };

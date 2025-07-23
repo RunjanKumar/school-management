@@ -6,6 +6,7 @@ import { Utils } from '../utils/utils';
 import { AdminInterface } from '../interfaces';
 import { sendEmailWithSES } from '../utils/commonFunctions';
 import config from '../config';
+import { MESSAGES } from '../commons/message';
 
 /**
  * Authenticates an admin and creates a login session
@@ -24,12 +25,12 @@ async function loginAdmin(payload: any) {
 	});
 
 	if (!admin) {
-		throw createErrorResponse(Constants.RESPONSE_MESSAGES.ADMIN_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+		throw createErrorResponse(MESSAGES.ADMIN_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
 	// check password
 	if (!(await Utils.comparePassword(payload.password, admin.password))) {
-		throw createErrorResponse(Constants.RESPONSE_MESSAGES.ADMIN_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+		throw createErrorResponse(MESSAGES.ADMIN_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
 	// generate token
@@ -44,7 +45,7 @@ async function loginAdmin(payload: any) {
 		expirationTime: new Date(Date.now() + Constants.TOKEN_EXPIRATION_TIME.ADMIN_LOGIN * 1000)
 	});
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.LOGIN_SUCCESSFUL, { token: token.token });
+	return createSuccessResponse(MESSAGES.LOGIN_SUCCESSFUL, { token: token.token });
 }
 
 /**
@@ -59,7 +60,7 @@ async function loginAdmin(payload: any) {
  * @throws {Object} Error response if profile retrieval fails
  */
 async function getAdminProfile(payload: any) {
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.ADMIN_PROFILE_FETCHED, {
+	return createSuccessResponse(MESSAGES.ADMIN_PROFILE_FETCHED, {
 		admin: {
 			_id: payload.admin._id,
 			name: payload.admin.name,
@@ -80,7 +81,7 @@ async function getAdminProfile(payload: any) {
 async function logoutAdmin(payload: any) {
 	await dbService.deleteOne(sessionModel, { token: payload.authToken });
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.LOGOUT_SUCCESSFUL);
+	return createSuccessResponse(MESSAGES.LOGOUT_SUCCESSFUL);
 }
 
 /**
@@ -94,7 +95,7 @@ async function forgotAdminPassword(payload: any) {
 	const admin: AdminInterface | null = await dbService.findOne(adminModel, { email: payload.email });
 
 	if (!admin) {
-		throw createErrorResponse(Constants.RESPONSE_MESSAGES.ADMIN_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+		throw createErrorResponse(MESSAGES.ADMIN_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
 	const forgotPasswordToken = Utils.generateJWTToken(admin._id.toString(), Constants.TOKEN_EXPIRATION_TIME.ADMIN_FORGOT_PASSWORD);
@@ -115,7 +116,7 @@ async function forgotAdminPassword(payload: any) {
 		Constants.EMAIL_TYPES.FORGOT_PASSWORD
 	);
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.FORGOT_PASSWORD_MAIL_SENT);
+	return createSuccessResponse(MESSAGES.FORGOT_PASSWORD_MAIL_SENT);
 }
 
 /**
@@ -133,7 +134,7 @@ async function resetAdminPassword(payload: any) {
 
 	await dbService.deleteOne(sessionModel, { token: payload.authToken });
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.PASSWORD_RESET);
+	return createSuccessResponse(MESSAGES.PASSWORD_RESET);
 }
 
 export const adminController = {

@@ -3,6 +3,7 @@ import dbService from '../services/databaseService';
 import { schoolOwnerModel, sessionModel } from '../models';
 import { Constants } from '../commons/constants';
 import { Utils } from '../utils/utils';
+import { MESSAGES } from '../commons/message';
 
 /**
  * Creates a new school owner in the system
@@ -22,13 +23,13 @@ async function createSchoolOwner(payload: any) {
 	});
 
 	if (schoolOwnerWithDuplicateEmail) {
-		throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_EMAIL_ALREADY_EXISTS, Constants.ERROR_TYPES.BAD_REQUEST);
+		throw createErrorResponse(MESSAGES.SCHOOL_OWNER_EMAIL_ALREADY_EXISTS, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
 	const schoolOwnerWithDuplicatePhoneNumber = await dbService.findOne(schoolOwnerModel, { $or: [ { contactNumber: payload.contactNumber }, { alternateContactNumber: payload.alternateContactNumber } ] });
 
 	if (schoolOwnerWithDuplicatePhoneNumber) {
-		throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_CONTACT_NUMBER_ALREADY_EXISTS, Constants.ERROR_TYPES.BAD_REQUEST);
+		throw createErrorResponse(MESSAGES.SCHOOL_OWNER_CONTACT_NUMBER_ALREADY_EXISTS, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
 	const schoolOwnerPassword = Utils.generateRandomPassword();
@@ -42,7 +43,7 @@ async function createSchoolOwner(payload: any) {
 		isEnabled: payload.isEnabled
 	});
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_CREATED, { schoolOwner });
+	return createSuccessResponse(MESSAGES.SCHOOL_OWNER_CREATED, { schoolOwner });
 }
 
 /**
@@ -61,14 +62,14 @@ async function updateSchoolOwner(payload: any) {
 	const schoolOwner = await dbService.findOne(schoolOwnerModel, { _id: payload.schoolOwnerId });
 
 	if (!schoolOwner) {
-		throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+		throw createErrorResponse(MESSAGES.SCHOOL_OWNER_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
 	if (payload.email && payload.email !== schoolOwner.email) {
 		const schoolOwnerWithDuplicateEmail = await dbService.findOne(schoolOwnerModel, { email: payload.email });
 
 		if (schoolOwnerWithDuplicateEmail) {
-			throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_EMAIL_ALREADY_EXISTS, Constants.ERROR_TYPES.BAD_REQUEST);
+			throw createErrorResponse(MESSAGES.SCHOOL_OWNER_EMAIL_ALREADY_EXISTS, Constants.ERROR_TYPES.BAD_REQUEST);
 		}
 	}
 
@@ -76,7 +77,7 @@ async function updateSchoolOwner(payload: any) {
 		const schoolOwnerWithDuplicatePhoneNumber = await dbService.findOne(schoolOwnerModel, { contactNumber: payload.contactNumber });
 
 		if (schoolOwnerWithDuplicatePhoneNumber) {
-			throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_CONTACT_NUMBER_ALREADY_EXISTS, Constants.ERROR_TYPES.BAD_REQUEST);
+			throw createErrorResponse(MESSAGES.SCHOOL_OWNER_CONTACT_NUMBER_ALREADY_EXISTS, Constants.ERROR_TYPES.BAD_REQUEST);
 		}
 	}
 
@@ -84,7 +85,7 @@ async function updateSchoolOwner(payload: any) {
 		const schoolOwnerWithDuplicateAlternatePhoneNumber = await dbService.findOne(schoolOwnerModel, { alternateContactNumber: payload.alternateContactNumber });
 
 		if (schoolOwnerWithDuplicateAlternatePhoneNumber) {
-			throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_CONTACT_NUMBER_ALREADY_EXISTS, Constants.ERROR_TYPES.BAD_REQUEST);
+			throw createErrorResponse(MESSAGES.SCHOOL_OWNER_CONTACT_NUMBER_ALREADY_EXISTS, Constants.ERROR_TYPES.BAD_REQUEST);
 		}
 	}
 
@@ -102,7 +103,7 @@ async function updateSchoolOwner(payload: any) {
 		}
 	);
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_UPDATED);
+	return createSuccessResponse(MESSAGES.SCHOOL_OWNER_UPDATED);
 }
 
 /**
@@ -150,7 +151,7 @@ async function listSchoolOwners(payload: any) {
 		{ $addFields: { count: { $ifNull: [ { $first: '$count.count' }, 0 ] } } }
 	]);
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNERS_LISTED, {
+	return createSuccessResponse(MESSAGES.SCHOOL_OWNERS_LISTED, {
 		data: schoolOwners[0]?.data ?? [],
 		count: schoolOwners[0]?.count ?? 0
 	});
@@ -180,10 +181,10 @@ async function fetchSchoolOwnerDetails(payload: any) {
 	);
 
 	if (!schoolOwner) {
-		throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+		throw createErrorResponse(MESSAGES.SCHOOL_OWNER_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_DETAILS_FETCHED, { schoolOwner });
+	return createSuccessResponse(MESSAGES.SCHOOL_OWNER_DETAILS_FETCHED, { schoolOwner });
 }
 
 /**
@@ -200,12 +201,12 @@ async function deleteSchoolOwners(payload: any) {
 	});
 
 	if (existingSchoolOwners !== payload.schoolOwnerIds.length) {
-		throw createErrorResponse(payload.schoolOwnerIds.length === 1 ? Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_NOT_FOUND : Constants.RESPONSE_MESSAGES.SCHOOL_OWNERS_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+		throw createErrorResponse(payload.schoolOwnerIds.length === 1 ? MESSAGES.SCHOOL_OWNER_NOT_FOUND : MESSAGES.SCHOOL_OWNERS_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
 	await dbService.updateMany(schoolOwnerModel, { _id: { $in: payload.schoolOwnerIds } }, { $set: { isDeleted: true } });
 
-	return createSuccessResponse(payload.schoolOwnerIds.length === 1 ? Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_DELETED : Constants.RESPONSE_MESSAGES.SCHOOL_OWNERS_DELETED);
+	return createSuccessResponse(payload.schoolOwnerIds.length === 1 ? MESSAGES.SCHOOL_OWNER_DELETED : MESSAGES.SCHOOL_OWNERS_DELETED);
 }
 
 /**
@@ -225,13 +226,13 @@ async function loginSchoolOwner(payload: any) {
 	});
 
 	if (!schoolOwner) {
-		throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+		throw createErrorResponse(MESSAGES.SCHOOL_OWNER_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
 	const isPasswordValid = await Utils.comparePassword(payload.password, schoolOwner.password);
 
 	if (!isPasswordValid) {
-		throw createErrorResponse(Constants.RESPONSE_MESSAGES.SCHOOL_OWNER_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+		throw createErrorResponse(MESSAGES.SCHOOL_OWNER_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
 	// generate token
@@ -246,7 +247,7 @@ async function loginSchoolOwner(payload: any) {
 		expirationTime: new Date(Date.now() + Constants.TOKEN_EXPIRATION_TIME.SCHOOL_OWNER_LOGIN * 1000)
 	});
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.LOGIN_SUCCESSFUL, { token: token.token });
+	return createSuccessResponse(MESSAGES.LOGIN_SUCCESSFUL, { token: token.token });
 }
 
 /**
@@ -265,7 +266,7 @@ async function changePassword(payload: any) {
 	const isPasswordValid = await Utils.comparePassword(payload.password, payload.schoolOwner.password);
 
 	if (!isPasswordValid) {
-		throw createErrorResponse(Constants.RESPONSE_MESSAGES.INVALID_PASSWORD, Constants.ERROR_TYPES.BAD_REQUEST);
+		throw createErrorResponse(MESSAGES.INVALID_PASSWORD, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
 	await dbService.updateOne(
@@ -279,7 +280,7 @@ async function changePassword(payload: any) {
 		}
 	);
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.PASSWORD_CHANGED);
+	return createSuccessResponse(MESSAGES.PASSWORD_CHANGED);
 }
 
 /**
@@ -294,7 +295,7 @@ async function changePassword(payload: any) {
 async function updateAccountDetails(payload: any) {
 	await dbService.updateOne(schoolOwnerModel, { _id: payload.schoolOwner._id }, { $set: { name: payload.name } });
 
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.ACCOUNT_DETAILS_UPDATED);
+	return createSuccessResponse(MESSAGES.ACCOUNT_DETAILS_UPDATED);
 }
 
 /**
@@ -311,7 +312,7 @@ async function updateAccountDetails(payload: any) {
  * @throws {Object} Error response if profile retrieval fails
  */
 async function getProfile(payload: any) {
-	return createSuccessResponse(Constants.RESPONSE_MESSAGES.PROFILE_DETAILS_FETCHED, {
+	return createSuccessResponse(MESSAGES.PROFILE_DETAILS_FETCHED, {
 		schoolOwner: {
 			_id: payload.schoolOwner._id,
 			name: payload.schoolOwner.name,

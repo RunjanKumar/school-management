@@ -1,5 +1,5 @@
 {
-  "name": "admin-boilerplate",
+  "name": "school-management-backend",
   "version": "1.0.0",
   "description": "Node.js + TypeScript + Express",
   "main": "dist/server.js",

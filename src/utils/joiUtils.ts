@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import moment from 'moment';
 import mongoose from 'mongoose';
+import { MESSAGES } from '../commons/message';
 import { Constants } from '../commons/constants';
 
 const joiUtils: any = {
@@ -9,8 +10,8 @@ const joiUtils: any = {
 		base: joi.string(),
 		messages: {
 			'string.objectId': '{{#label}} must be a valid id',
-			'string.phoneNumber': Constants.RESPONSE_MESSAGES.PHONE_NUMBER_VALIDATION_FAILED,
-			'string.password': Constants.RESPONSE_MESSAGES.PASSWORD_VALIDATION_FAILED
+			'string.phoneNumber': MESSAGES.PHONE_NUMBER_VALIDATION_FAILED,
+			'string.password': MESSAGES.PASSWORD_VALIDATION_FAILED
 		},
 		rules: {
 			phoneNumber: {
@@ -95,6 +96,24 @@ joiUtils.Joi = joiUtils.Joi.extend((joi: any) => ({
 					return helpers.error('date.dateOnly');
 				}
 				return parsedDate.endOf('day').toDate();
+			}
+		}
+	}
+}));
+
+joiUtils.Joi = joiUtils.Joi.extend((joi: any) => ({
+	type: 'number',
+	base: joi.number(),
+	messages: {
+		'number.yearNotInFuture': '{{#label}} must not be in a future year.'
+	},
+	rules: {
+		yearNotInFuture: {
+			validate(value: any, helpers: any) {
+				if (value > new Date().getFullYear()) {
+					return helpers.error('number.yearNotInFuture');
+				}
+				return value;
 			}
 		}
 	}
