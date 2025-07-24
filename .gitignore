@@ -3,6 +3,7 @@ node_modules/
 
 # Ignore logs
 logs/
+.scannerwork/
 *.log
 npm-debug.log*
 

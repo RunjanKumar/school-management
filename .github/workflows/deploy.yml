@@ -27,5 +27,9 @@ jobs:
           sudo git pull origin development &&
           npm install &&
           npm run build &&
+          sonar \
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} &&
           sudo pm2 reload 0
         EOF
