@@ -66,7 +66,7 @@ export default {
 	DUMMY_DATA_FOR_TRY_ON: process.env.DUMMY_DATA_FOR_TRY_ON === '1',
 	DUMMY_DATA_FOR_MEASUREMENT: process.env.DUMMY_DATA_FOR_MEASUREMENT === '1',
 	OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? 'your-openai-api-key',
-	IS_DUMMY_DATA_FOR_GARMENT_ANALYSIS: process.env.DUMMY_DATA_FOR_GARMENT_ANALYSIS === '2',
+	IS_DUMMY_DATA_FOR_GARMENT_ANALYSIS: process.env.DUMMY_DATA_FOR_GARMENT_ANALYSIS === '1',
 	CLIENT_EMAIL: process.env.CLIENT_EMAIL ?? 'adminboilerplate@yopmail.com',
 	AWS: {
 		REGION: process.env.AWS_REGION ?? '',
