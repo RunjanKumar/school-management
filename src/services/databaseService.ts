@@ -52,7 +52,7 @@ const dbService: DbService = {
 	},
 
 	findOneAndDelete: async <T extends Document>(model: Model<T>, criteria: FilterQuery<T>): Promise<T | null> => {
-		return (await model.findOneAndDelete(criteria)) as T | null;
+		return await model.findOneAndDelete(criteria);
 	},
 
 	updateMany: async <T extends Document>(model: Model<T>, criteria: FilterQuery<T>, dataToUpdate: UpdateQuery<T>): Promise<void> => {
