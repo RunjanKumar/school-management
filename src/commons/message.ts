@@ -82,5 +82,27 @@ export const MESSAGES = {
 	USER_ROLES_NOT_FOUND: 'User roles not found.',
 	USER_ROLE_ALREADY_EXISTS: 'User role already exists.',
 	USER_ROLES_FETCHED: 'User roles fetched successfully.',
-	USER_ROLES_DELETED: 'User roles deleted successfully.'
+	USER_ROLES_DELETED: 'User roles deleted successfully.',
+
+	// class related messages
+	CLASS_CREATED: 'Class created successfully.',
+	CLASS_UPDATED: 'Class updated successfully.',
+	CLASS_DELETED: 'Class deleted successfully.',
+	CLASS_NOT_FOUND: 'Class not found.',
+	CLASSES_NOT_FOUND: 'Classes not found.',
+	CLASS_ALREADY_EXISTS: 'Class with the same name already exists for this school.',
+	CLASSES_FETCHED: 'Classes fetched successfully.',
+
+	// class section related messages
+	CLASS_SECTION_CREATED: 'Class section created successfully.',
+	CLASS_SECTION_UPDATED: 'Class section updated successfully.',
+	CLASS_SECTION_DELETED: 'Class section deleted successfully.',
+	CLASS_SECTION_NOT_FOUND: 'Class section not found.',
+	CLASS_SECTIONS_NOT_FOUND: 'Class sections not found.',
+	CLASS_SECTION_ALREADY_EXISTS: 'Class section with the same name already exists in this class.',
+	CLASS_SECTIONS_FETCHED: 'Class sections fetched successfully.',
+
+	// file upload related messages
+	FILE_UPLOAD_SUCCESS: 'File uploaded successfully.',
+	FILE_REQUIRED_IN_PAYLOAD: 'File is required in the payload.'
 };

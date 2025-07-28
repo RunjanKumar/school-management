@@ -11,6 +11,7 @@
     "lint:fix": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\" && eslint --fix \"src/**/*.{ts,tsx}\" && git add ."
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.850.0",
     "@aws-sdk/client-ses": "^3.840.0",
     "@types/bcrypt": "^5.0.2",
     "bcrypt": "^5.1.1",

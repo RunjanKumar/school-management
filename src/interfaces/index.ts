@@ -8,5 +8,7 @@ import { SchoolBoardInterface } from './schoolBoardInterface';
 import { SchoolMediumInterface } from './schoolMediumInterface';
 import { SchoolEducationLevelInterface } from './schoolEducationLevelInterface';
 import { UserRoleInterface, UserRoleSchoolPermissions } from './userRoleInterface';
+import { ClassInterface } from './classInterface';
+import { ClassSectionInterface } from './classSectionInterface';
 
-export { AdminInterface, DBVersionInterface, SessionInterface, AuthenticatedRequestInterface, SchoolOwnerInterface, SchoolInterface, SchoolBoardInterface, SchoolMediumInterface, SchoolEducationLevelInterface, UserRoleInterface, UserRoleSchoolPermissions };
+export { AdminInterface, DBVersionInterface, SessionInterface, AuthenticatedRequestInterface, SchoolOwnerInterface, SchoolInterface, ClassInterface, ClassSectionInterface, SchoolBoardInterface, SchoolMediumInterface, SchoolEducationLevelInterface, UserRoleInterface, UserRoleSchoolPermissions };
