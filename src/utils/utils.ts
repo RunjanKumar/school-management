@@ -14,7 +14,7 @@ import { SignedToken } from '../commons/interfaces';
  */
 
 const parseTemplate = (str: string, replacementArray: Array<{ base: string; replacement: string }>) => {
-	if (!replacementArray || !replacementArray.length) {
+	if (!replacementArray?.length) {
 		return str;
 	}
 	let result = str;
