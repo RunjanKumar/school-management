@@ -82,5 +82,8 @@ export const MESSAGES = {
 	USER_ROLES_NOT_FOUND: 'User roles not found.',
 	USER_ROLE_ALREADY_EXISTS: 'User role already exists.',
 	USER_ROLES_FETCHED: 'User roles fetched successfully.',
-	USER_ROLES_DELETED: 'User roles deleted successfully.'
+	USER_ROLES_DELETED: 'User roles deleted successfully.',
+
+	// file upload related messages
+	FILE_UPLOAD_FAILED: 'File upload failed.'
 };

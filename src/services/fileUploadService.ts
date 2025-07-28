@@ -5,6 +5,9 @@ import path from 'path';
 
 import CONFIG from '../config';
 import { ObjectId } from 'mongoose';
+import { createErrorResponse } from '../commons/responseHelpers';
+import { MESSAGES } from '../commons/message';
+import { Constants } from '../commons/constants';
 
 /**
  * function to Upload file using File stream pipeline
@@ -20,7 +23,8 @@ export const uploadFileToLocal = async (readableFile: any, filePath: any, pathTo
 		fileWriteStream.write(readableFile.buffer);
 		fileWriteStream.end((err: any) => {
 			if (err) {
-				reject(err);
+				console.log('File upload failed: ', err);
+				reject(createErrorResponse(MESSAGES.FILE_UPLOAD_FAILED, Constants.ERROR_TYPES.BAD_REQUEST));
 			} else {
 				// As api gateway will only forward when file is added.
 				const fileUrl = `${CONFIG.SERVER_URL}/${filePath}`;
