@@ -43,7 +43,7 @@ export const uploadFileToLocal = async (readableFile: any, filePath: any, pathTo
 export const uploadManyFiles = async (files: any, userId: string | ObjectId) => {
 	const uploadedFiles = [];
 	for (const file of files) {
-		const fileName = `${userId}_${Date.now()}_${file.originalname}`;
+		const fileName = `${userId.toString()}_${Date.now()}_${file.originalname}`;
 		const relativePath = `public/userFiles/${fileName}`;
 		const basePath = path.join(__dirname, '../../public/userFiles');
 		const filePath = await uploadFileToLocal(file, relativePath, basePath);
