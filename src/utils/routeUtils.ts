@@ -21,7 +21,7 @@ const uploadMiddleware = multer({
 		fileSize: 5 * 1024 * 1024 // 5 MB
 	},
 	fileFilter: (req, file, cb) => {
-		const allowedMimeTypes = [ 'application/pdf', 'image/png', 'image/jpeg', 'application/msword' ];
+		const allowedMimeTypes = [ 'image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/svg+xml' ];
 		if (allowedMimeTypes.includes(file.mimetype)) {
 			cb(null, true);
 		} else {
