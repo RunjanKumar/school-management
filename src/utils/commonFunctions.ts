@@ -76,7 +76,7 @@ export const sendEmail = async (payload: any, type: number) => {
 
 	let template: HandlebarsTemplateDelegate<any> | string = '';
 	let result = '';
-	if (mailData && mailData.template) {
+	if (mailData?.template) {
 		handlebars.registerHelper('if_lte', function (this: any, a: number, b: number, opts: any) {
 			return a <= b ? opts.fn(this) : opts.inverse(this);
 		});
@@ -122,7 +122,7 @@ export const sendEmailWithSES = async (payload: any, type: number) => {
 
 	let template: HandlebarsTemplateDelegate<any> | string = '';
 	let result = '';
-	if (mailData && mailData.template) {
+	if (mailData?.template) {
 		handlebars.registerHelper('if_lte', function (this: any, a: number, b: number, opts: any) {
 			return a <= b ? opts.fn(this) : opts.inverse(this);
 		});
