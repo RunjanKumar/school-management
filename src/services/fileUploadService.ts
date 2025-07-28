@@ -2,15 +2,24 @@
 
 import fs from 'fs';
 import path from 'path';
-
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import CONFIG from '../config';
 import { ObjectId } from 'mongoose';
 import { createErrorResponse } from '../commons/responseHelpers';
 import { MESSAGES } from '../commons/message';
 import { Constants } from '../commons/constants';
 
+interface FilePayload {
+	fieldname: string;
+	originalname: string;
+	encoding: string;
+	mimetype: string;
+	buffer: Buffer;
+	size: number;
+}
+
 /**
- * function to Upload file using File stream pipeline
+ * Upload file to local storage.
  */
 export const uploadFileToLocal = async (readableFile: any, filePath: any, pathToUpload: any): Promise<Record<string, string>> => {
 	if (!fs.existsSync(pathToUpload)) {
@@ -65,4 +74,51 @@ export const uploadFile = async (payload: any): Promise<Record<string, string>> 
 	const fileName = `${Date.now()}_${fileNameArray.filter((ele: any) => ele !== fileExtention).join('_')}.${fileExtention}`;
 
 	return await uploadFileToLocal(payload.file, fileName, filePath);
+};
+
+// AWS S3 Client Setup using v3 SDK
+// This replaces the AWS.config.update and direct AWS.S3 instantiation for the S3 bucket.
+const s3Client = new S3Client({
+	region: CONFIG.S3_BUCKET.region,
+	credentials: {
+		accessKeyId: CONFIG.S3_BUCKET.accessKeyId,
+		secretAccessKey: CONFIG.S3_BUCKET.secretAccessKey
+	}
+});
+
+console.log('AWS S3 Config (v3 Client Initialized for region):', CONFIG.S3_BUCKET.region);
+
+export const uploadFileToS3 = async (payload: FilePayload, fileName: string): Promise<string> => {
+	const bucketName = CONFIG.S3_BUCKET.bucketName;
+	console.log('Uploading file to S3 bucket:', bucketName, 'with file name:', payload);
+	const command = new PutObjectCommand({
+		Bucket: bucketName,
+		Key: fileName,
+		Body: payload.buffer,
+		ContentType: payload.mimetype
+		// ACL: 'public-read', // Uncomment if you need public-read access. Be cautious.
+	});
+
+	try {
+		const data = await s3Client.send(command); // Execute the command
+
+		console.log('S3 PutObjectCommand Success:', data);
+
+		const cloudFrontBaseUrl = process.env.CLOUD_FRONT_URL;
+		let imageUrl: string;
+
+		if (cloudFrontBaseUrl) {
+			imageUrl = `${cloudFrontBaseUrl}/${fileName}`; // Use fileName as the key for CloudFront URL
+		} else {
+			// Fallback to S3 object URL if CloudFront URL is not available
+			// Note: PutObjectCommand result does NOT directly return Location like v2 upload() or v3 lib-storage
+			// You have to construct it from the bucket name, region, and key.
+			imageUrl = `https://${bucketName}.s3.${CONFIG.S3_BUCKET.region}.amazonaws.com/${fileName}`;
+		}
+
+		return imageUrl;
+	} catch (err) {
+		console.error('S3 PutObjectCommand Error:', err);
+		throw err; // Re-throw the error for the calling function to handle
+	}
 };

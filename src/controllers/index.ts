@@ -5,3 +5,6 @@ export { schoolBoardController } from './schoolBoardController';
 export { schoolMediumController } from './schoolMediumController';
 export { schoolEducationLevelController } from './schoolEducationLevelController';
 export { userRoleController } from './userRoleController';
+export { classController } from './classController';
+export { classSectionController } from './classSectionController';
+export { fileUploadController } from './fileUploadController';

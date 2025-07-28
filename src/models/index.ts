@@ -7,5 +7,7 @@ import schoolBoardModel from './schoolBoardModel';
 import schoolMediumModel from './schoolMediumModel';
 import schoolEducationLevelModel from './schoolEducationLevelModel';
 import userRoleModel from './userRoleModel';
+import { classModel } from './classModel';
+import { classSectionModel } from './classSectionModel';
 
-export { adminModel, dbVersionModel, sessionModel, schoolOwnerModel, schoolModel, schoolBoardModel, schoolMediumModel, schoolEducationLevelModel, userRoleModel };
+export { adminModel, dbVersionModel, sessionModel, schoolOwnerModel, schoolModel, schoolBoardModel, schoolMediumModel, schoolEducationLevelModel, userRoleModel, classModel, classSectionModel };
