@@ -87,6 +87,7 @@ export const MESSAGES = {
 	// class related messages
 	CLASS_CREATED: 'Class created successfully.',
 	CLASS_UPDATED: 'Class updated successfully.',
+	CLASSES_DELETED: 'Classes deleted successfully.',
 	CLASS_DELETED: 'Class deleted successfully.',
 	CLASS_NOT_FOUND: 'Class not found.',
 	CLASSES_NOT_FOUND: 'Classes not found.',
@@ -97,6 +98,7 @@ export const MESSAGES = {
 	CLASS_SECTION_CREATED: 'Class section created successfully.',
 	CLASS_SECTION_UPDATED: 'Class section updated successfully.',
 	CLASS_SECTION_DELETED: 'Class section deleted successfully.',
+	CLASS_SECTIONS_DELETED: 'Class sections deleted successfully.',
 	CLASS_SECTION_NOT_FOUND: 'Class section not found.',
 	CLASS_SECTIONS_NOT_FOUND: 'Class sections not found.',
 	CLASS_SECTION_ALREADY_EXISTS: 'Class section with the same name already exists in this class.',

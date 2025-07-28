@@ -5,8 +5,6 @@ import { Constants } from '../commons/constants';
 import { uploadFileToS3 } from '../services/fileUploadService'; // Ensure this path is correct
 
 async function uploadFile(payload: any) {
-	// console.log('Received file upload payload:', payload);
-	// Add validation back for robust handling
 	if (!payload.file || !Object.keys(payload.file).length) {
 		throw createErrorResponse(MESSAGES.FILE_REQUIRED_IN_PAYLOAD, Constants.ERROR_TYPES.BAD_REQUEST);
 	}

@@ -7,7 +7,7 @@ const Joi = joiUtils.Joi;
 const routes: any = [
 	{
 		method: 'POST',
-		path: '/v1/class-section',
+		path: '/v1/classSection',
 		joiSchemaForSwagger: {
 			headers: {
 				authorization: Joi.string().required().description('JWT token of the admin or school owner')
@@ -29,14 +29,14 @@ const routes: any = [
 
 	{
 		method: 'GET',
-		path: '/v1/class-section/:classId/:schoolId',
+		path: '/v1/classSection',
 		joiSchemaForSwagger: {
 			headers: {
 				authorization: Joi.string().required().description('JWT token of the admin or school owner')
 			},
-			params: {
+			query: {
 				classId: Joi.string().mongoId().required().description('Class ID to fetch sections for'),
-				schoolId: Joi.string().mongoId().required().description('School ID to fetch sections for')
+				name: Joi.string().optional().description('Optional section name to filter by')
 			},
 			group: 'Class Section',
 			description: 'API to get all sections of a class',
@@ -48,16 +48,13 @@ const routes: any = [
 
 	{
 		method: 'PUT',
-		path: '/v1/class-section/:classSectionId/:schoolId',
+		path: '/v1/classSection',
 		joiSchemaForSwagger: {
 			headers: {
 				authorization: Joi.string().required().description('JWT token of the admin or school owner')
 			},
-			params: {
-				classSectionId: Joi.string().mongoId().required().description('Class section ID to update'),
-				schoolId: Joi.string().mongoId().required().description('School ID to update')
-			},
 			body: {
+				classSectionId: Joi.string().mongoId().required().description('Class section ID to update'),
 				name: Joi.string().uppercase().optional().description('Updated section name'),
 				capacity: Joi.number().min(0).optional().description('Updated capacity'),
 				sectionHeadTeacherId: Joi.string().mongoId().optional().description('Updated head teacher ID')
@@ -71,14 +68,13 @@ const routes: any = [
 	},
 	{
 		method: 'DELETE',
-		path: '/v1/class-section/:classSectionId/:schoolId',
+		path: '/v1/classSection',
 		joiSchemaForSwagger: {
 			headers: {
 				authorization: Joi.string().required().description('JWT token of the admin or school owner')
 			},
-			params: {
-				classSectionId: Joi.string().mongoId().required().description('Class section ID to delete'),
-				schoolId: Joi.string().mongoId().required().description('School ID to delete')
+			body: {
+				classSectionIds: Joi.array().items(Joi.string().mongoId()).min(1).required().description('Class section IDs to delete')
 			},
 			group: 'Class Section',
 			description: 'API to soft-delete a class section',

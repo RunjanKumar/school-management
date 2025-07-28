@@ -9,7 +9,7 @@ const classSchema: Schema<ClassInterface> = new Schema(
 			trim: true
 		},
 		schoolId: {
-			type: mongoose.Schema.Types.ObjectId,
+			type: Schema.Types.ObjectId,
 			ref: 'schools',
 			required: true
 		},
@@ -33,11 +33,5 @@ const classSchema: Schema<ClassInterface> = new Schema(
 		collection: 'classes'
 	}
 );
-
-// Add compound index for uniqueness
-// classSchema.index(
-// 	{ name: 1, schoolId: 1 },
-// 	{ unique: true, name: 'unique_class_per_school_per_year' }
-// );
 
 export const classModel = mongoose.model<ClassInterface>('classes', classSchema);

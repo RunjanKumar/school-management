@@ -10,17 +10,17 @@ const classSectionSchema: Schema<ClassSectionInterface> = new Schema(
 			uppercase: true
 		},
 		classId: {
-			type: mongoose.Schema.Types.ObjectId,
+			type: Schema.Types.ObjectId,
 			ref: 'classes',
 			required: true
 		},
 		schoolId: {
-			type: mongoose.Schema.Types.ObjectId,
+			type: Schema.Types.ObjectId,
 			ref: 'schools',
 			required: true
 		},
 		sectionHeadTeacherId: {
-			type: mongoose.Schema.Types.ObjectId,
+			type: Schema.Types.ObjectId,
 			ref: 'teachers'
 		},
 		capacity: {
@@ -44,11 +44,5 @@ const classSectionSchema: Schema<ClassSectionInterface> = new Schema(
 		collection: 'classSections'
 	}
 );
-
-// Add compound index for uniqueness
-// classSectionSchema.index(
-// 	{ name: 1, classId: 1 },
-// 	{ unique: true, name: 'unique_section_per_class_per_year' }
-// );
 
 export const classSectionModel = mongoose.model<ClassSectionInterface>('classSections', classSectionSchema);

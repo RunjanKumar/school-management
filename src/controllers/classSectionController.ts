@@ -8,7 +8,6 @@ import { Types } from 'mongoose';
 async function createClassSection(payload: any) {
 	const existing = await dbService.findOne(classSectionModel, {
 		name: payload.name,
-		schoolId: payload.schoolId,
 		classId: payload.classId,
 		isDeleted: false
 	});
@@ -20,7 +19,6 @@ async function createClassSection(payload: any) {
 	const created = await dbService.create(classSectionModel, {
 		name: payload.name,
 		classId: payload.classId,
-		schoolId: payload.schoolId,
 		sectionHeadTeacherId: payload.sectionHeadTeacherId,
 		capacity: payload.capacity
 	});
@@ -31,7 +29,6 @@ async function createClassSection(payload: any) {
 async function updateClassSection(payload: any) {
 	const existing = await dbService.findOne(classSectionModel, {
 		_id: payload.classSectionId,
-		schoolId: payload.schoolId,
 		isDeleted: false
 	});
 
@@ -56,7 +53,7 @@ async function updateClassSection(payload: any) {
 	if (payload.capacity !== undefined) updateData.capacity = payload.capacity;
 	if (payload.sectionHeadTeacherId) updateData.sectionHeadTeacherId = payload.sectionHeadTeacherId;
 
-	await dbService.updateOne(classSectionModel, { _id: payload.classSectionId, schoolId: payload.schoolId }, { $set: updateData });
+	await dbService.updateOne(classSectionModel, { _id: payload.classSectionId, isDeleted: false }, { $set: updateData });
 
 	return createSuccessResponse(MESSAGES.CLASS_SECTION_UPDATED);
 }
@@ -64,9 +61,12 @@ async function updateClassSection(payload: any) {
 async function getSectionsByClass(payload: any) {
 	const match: any = {
 		classId: new Types.ObjectId(payload.classId),
-		schoolId: new Types.ObjectId(payload.schoolId),
 		isDeleted: false
 	};
+
+	if (payload.name) {
+		match.name = { $regex: payload.name, $options: 'i' }; // Case-insensitive search
+	}
 
 	const data = await dbService.aggregate(classSectionModel, [
 		{ $match: match },
@@ -80,7 +80,6 @@ async function getSectionsByClass(payload: any) {
 						$project: {
 							_id: 1,
 							name: 1,
-							schoolId: 1,
 							classId: 1,
 							capacity: 1,
 							currentStrength: 1,
@@ -103,18 +102,17 @@ async function getSectionsByClass(payload: any) {
 
 async function deleteClassSection(payload: any) {
 	const existing = await dbService.count(classSectionModel, {
-		_id: payload.classSectionId,
-		schoolId: payload.schoolId,
+		_id: { $in: payload.classSectionIds },
 		isDeleted: false
 	});
 
-	if (!existing) {
-		throw createErrorResponse(MESSAGES.CLASS_SECTION_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+	if (existing !== payload.classSectionIds.length) {
+		throw createErrorResponse(payload.classSectionIds.length > 1 ? MESSAGES.CLASS_SECTIONS_NOT_FOUND : MESSAGES.CLASS_SECTION_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
-	await dbService.updateOne(classSectionModel, { _id: payload.classSectionId, schoolId: payload.schoolId }, { $set: { isDeleted: true } });
+	await dbService.updateOne(classSectionModel, { _id: { $in: payload.classSectionIds } }, { $set: { isDeleted: true } });
 
-	return createSuccessResponse(MESSAGES.CLASS_SECTION_DELETED);
+	return createSuccessResponse(payload.schoolIds.length > 1 ? MESSAGES.CLASS_SECTIONS_DELETED : MESSAGES.CLASS_SECTION_DELETED);
 }
 
 export const classSectionController = {

@@ -29,7 +29,6 @@ async function createClass(payload: any) {
 async function updateClass(payload: any) {
 	const existingClass = await dbService.findOne(classModel, {
 		_id: payload.classId,
-		schoolId: payload.schoolId,
 		isDeleted: false
 	});
 
@@ -40,7 +39,6 @@ async function updateClass(payload: any) {
 	if (payload.name && payload.name !== existingClass.name) {
 		const duplicateClass = await dbService.findOne(classModel, {
 			name: payload.name,
-			schoolId: existingClass.schoolId,
 			isDeleted: false
 		});
 
@@ -51,7 +49,7 @@ async function updateClass(payload: any) {
 
 	await dbService.updateOne(
 		classModel,
-		{ _id: payload.classId, schoolId: payload.schoolId },
+		{ _id: payload.classId },
 		{
 			$set: {
 				name: payload.name,
@@ -69,6 +67,9 @@ async function getClassesBySchool(payload: any) {
 		schoolId: new Types.ObjectId(payload.schoolId),
 		isDeleted: false
 	};
+	if (payload.name) {
+		match.name = { $regex: payload.name, $options: 'i' }; // \
+	}
 
 	const data = await dbService.aggregate(classModel, [
 		{ $match: match },
@@ -82,7 +83,6 @@ async function getClassesBySchool(payload: any) {
 						$project: {
 							_id: 1,
 							name: 1,
-							schoolId: 1,
 							description: 1,
 							capacity: 1,
 							createdAt: 1
@@ -103,19 +103,18 @@ async function getClassesBySchool(payload: any) {
 
 async function deleteClass(payload: any) {
 	console.log('Deleting class with ID:', payload);
-	const existingClass = await dbService.count(classModel, {
-		_id: payload.classId,
-		schoolId: payload.schoolId,
+	const existingClasses = await dbService.count(classModel, {
+		_id: { $in: payload.classIds },
 		isDeleted: false
 	});
 
-	if (!existingClass) {
-		throw createErrorResponse(MESSAGES.CLASS_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
+	if (existingClasses !== payload.classIds.length) {
+		throw createErrorResponse(payload.classIds.length > 1 ? MESSAGES.CLASSES_NOT_FOUND : MESSAGES.CLASS_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 	}
 
-	await dbService.updateOne(classModel, { _id: payload.classId, schoolId: payload.schoolId }, { $set: { isDeleted: true } });
+	await dbService.updateOne(classModel, { _id: { $in: payload.classIds } }, { $set: { isDeleted: true } });
 
-	return createSuccessResponse(MESSAGES.CLASS_DELETED);
+	return createSuccessResponse(payload.schoolIds.length > 1 ? MESSAGES.CLASSES_DELETED : MESSAGES.CLASS_DELETED);
 }
 
 export const classController = {

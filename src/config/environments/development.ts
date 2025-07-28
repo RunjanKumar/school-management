@@ -64,18 +64,18 @@ const config: Config = {
 		}
 	},
 	AWS: {
-		REGION: process.env.AWS_REGION || '',
-		SES_ACCESS_ID: process.env.AWS_SES_ACCESS_ID || '',
-		SES_SECRET_KEY: process.env.AWS_SES_SECRET_KEY || ''
+		REGION: process.env.AWS_REGION ?? '',
+		SES_ACCESS_ID: process.env.AWS_SES_ACCESS_ID ?? '',
+		SES_SECRET_KEY: process.env.AWS_SES_SECRET_KEY ?? ''
 	},
 	S3_BUCKET: {
-		bucketName: process.env.S3_BUCKET_NAME || 'school-management-bucket',
-		accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
-		secretAccessKey: process.env.S3_SECRET_ACCESS || '',
-		region: process.env.S3_REGION || ''
+		bucketName: process.env.S3_BUCKET_NAME ?? 'school-management-bucket',
+		accessKeyId: process.env.S3_ACCESS_KEY_ID ?? '',
+		secretAccessKey: process.env.S3_SECRET_ACCESS ?? '',
+		region: process.env.S3_REGION ?? ''
 	},
-	CLIENT_EMAIL: process.env.CLIENT_EMAIL || '',
-	COMMUNICATION_EMAIL: process.env.COMMUNICATION_EMAIL || ''
+	CLIENT_EMAIL: process.env.CLIENT_EMAIL ?? '',
+	COMMUNICATION_EMAIL: process.env.COMMUNICATION_EMAIL ?? ''
 };
 
 export default config;

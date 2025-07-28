@@ -22,19 +22,20 @@ const routes: any = [
 			description: 'API to create a class',
 			model: 'CreateClass'
 		},
-		auth: Constants.AVAILABLE_AUTHS.ADMIN_AND_SCHOOL_OWNER, // or SCHOOL_OWNER if defined separately
+		auth: Constants.AVAILABLE_AUTHS.ADMIN_AND_SCHOOL_OWNER,
 		handler: classController.createClass
 	},
 
 	{
 		method: 'GET',
-		path: '/v1/class/:schoolId',
+		path: '/v1/class',
 		joiSchemaForSwagger: {
 			headers: {
 				authorization: Joi.string().required().description('JWT token of the admin or school owner')
 			},
-			params: {
-				schoolId: Joi.string().mongoId().required().description('School ID to fetch classes for')
+			query: {
+				schoolId: Joi.string().mongoId().required().description('School ID to fetch classes for'),
+				name: Joi.string().optional().description('Optional class name to filter by')
 			},
 			group: 'Class',
 			description: 'API to get all classes of a school',
@@ -46,16 +47,13 @@ const routes: any = [
 
 	{
 		method: 'PUT',
-		path: '/v1/class/:classId/:schoolId',
+		path: '/v1/class',
 		joiSchemaForSwagger: {
 			headers: {
 				authorization: Joi.string().required().description('JWT token of the admin or school owner')
 			},
-			params: {
-				classId: Joi.string().mongoId().required().description('Class ID to update'),
-				schoolId: Joi.string().mongoId().required().description('School ID to update')
-			},
 			body: {
+				classId: Joi.string().mongoId().required().description('Class ID to update'),
 				name: Joi.string().optional().description('Updated name of the class'),
 				description: Joi.string().optional().description('Updated description'),
 				capacity: Joi.number().min(1).optional().description('Updated capacity')
@@ -70,14 +68,13 @@ const routes: any = [
 
 	{
 		method: 'DELETE',
-		path: '/v1/class/:classId/:schoolId',
+		path: '/v1/class',
 		joiSchemaForSwagger: {
 			headers: {
 				authorization: Joi.string().required().description('JWT token of the admin or school owner')
 			},
-			params: {
-				classId: Joi.string().mongoId().required().description('Class ID to delete'),
-				schoolId: Joi.string().mongoId().required().description('School ID to delete')
+			body: {
+				classIds: Joi.array().items(Joi.string().mongoId()).min(1).required().description('Class IDs to delete')
 			},
 			group: 'Class',
 			description: 'API to soft-delete a class',
