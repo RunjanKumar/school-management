@@ -15,7 +15,7 @@ const joiUtils: any = {
 		},
 		rules: {
 			phoneNumber: {
-				validate(value: any, helpers: any) {
+				validate(value: string, helpers: any) {
 					if (!Constants.REGEX.PHONE_NUMBER.test(value)) {
 						return helpers.error('string.phoneNumber');
 					}
@@ -23,7 +23,7 @@ const joiUtils: any = {
 				}
 			},
 			mongoId: {
-				validate(value: any, helpers: any) {
+				validate(value: string, helpers: any) {
 					if (mongoose.Types.ObjectId.isValid(value)) {
 						return new mongoose.Types.ObjectId(value);
 					}
@@ -31,7 +31,7 @@ const joiUtils: any = {
 				}
 			},
 			password: {
-				validate(value: any, helpers: any) {
+				validate(value: string, helpers: any) {
 					if (!Constants.REGEX.PASSWORD.test(value)) {
 						return helpers.error('string.password');
 					}
@@ -39,7 +39,7 @@ const joiUtils: any = {
 				}
 			},
 			capitalize: {
-				validate(value: any) {
+				validate(value: string) {
 					if (typeof value !== 'string') {
 						return '';
 					}
