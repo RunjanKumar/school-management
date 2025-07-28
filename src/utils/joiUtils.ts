@@ -66,7 +66,7 @@ joiUtils.Joi = joiUtils.Joi.extend((joi: any) => ({
 			validate(value: any, helpers: any) {
 				const date = new Date(value);
 				if (date) {
-					const timestamp = new Date(value || new Date()).setHours(0, 0, 0, 0);
+					const timestamp = new Date(value ?? new Date()).setHours(0, 0, 0, 0);
 					return new Date(timestamp);
 				}
 				return helpers.error('date.dateOnly');

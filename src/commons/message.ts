@@ -85,5 +85,6 @@ export const MESSAGES = {
 	USER_ROLES_DELETED: 'User roles deleted successfully.',
 
 	// file upload related messages
-	FILE_UPLOAD_FAILED: 'File upload failed.'
+	FILE_UPLOAD_FAILED: 'File upload failed.',
+	FILE_UPLOAD_ERROR: 'File upload error.'
 };

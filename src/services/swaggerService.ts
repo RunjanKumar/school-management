@@ -233,9 +233,9 @@ class Swagger {
 
 		const swaggerData = fs.readFileSync('swagger.json', 'utf-8');
 		const otherData = JSON.parse(swaggerData);
-		const name = joiDefinitions.model || Date.now();
-		const tag = joiDefinitions.group || 'default';
-		const summary = joiDefinitions.description || 'No desc';
+		const name = joiDefinitions.model ?? Date.now();
+		const tag = joiDefinitions.group ?? 'default';
+		const summary = joiDefinitions.description ?? 'No desc';
 
 		const toSwagger = j2s(joiDefinitions).swagger;
 		if (toSwagger && toSwagger.properties && toSwagger.properties.body) {

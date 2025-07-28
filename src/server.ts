@@ -10,7 +10,7 @@ import connectToDatabase from './startup/mongoStartup';
 
 const application: Application = express();
 const server = http.createServer(application);
-const PORT = CONFIG.PORT || 3000;
+const PORT = CONFIG.PORT ?? 3000;
 
 const startServerInitSequence = async () => {
 	connectToDatabase();
