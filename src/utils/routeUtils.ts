@@ -32,7 +32,7 @@ const uploadMiddleware = multer({
 
 const multerErrorHandler: any = (err: Error, req: Request, res: Response, next: NextFunction) => {
 	if (err instanceof multer.MulterError || err?.message?.includes(MESSAGES.FILE_UPLOAD_TYPE_ERROR)) {
-		const responseObject = createErrorResponse(err.message || 'File upload error', Constants.ERROR_TYPES.BAD_REQUEST);
+		const responseObject = createErrorResponse(err.message ?? MESSAGES.FILE_UPLOAD_ERROR, Constants.ERROR_TYPES.BAD_REQUEST);
 		return res.status(responseObject.statusCode).json(responseObject);
 	}
 	next(err);
@@ -117,18 +117,18 @@ const getHandlerMethod = (route: any) => {
 	const handler = route.handler;
 	return (request: any, response: any) => {
 		const payload = {
-			...((request.body || {}).value || {}),
-			...((request.params || {}).value || {}),
-			...((request.query || {}).value || {}),
-			...((request.formData || {}).value || {}),
-			user: request.user ? request.user : {},
-			admin: request.admin ? request.admin : {},
-			schoolOwner: request.schoolOwner ? request.schoolOwner : {},
-			userSession: request.userSession ? request.userSession : {},
-			authToken: request.headers.authorization || '',
+			...(request.body?.value ?? {}),
+			...(request.params?.value ?? {}),
+			...(request.query?.value ?? {}),
+			...(request.formData?.value ?? {}),
+			user: request.user ?? {},
+			admin: request.admin ?? {},
+			schoolOwner: request.schoolOwner ?? {},
+			userSession: request.userSession ?? {},
+			authToken: request.headers.authorization ?? '',
 			key: !!request.headers['x-api-key'],
-			file: request.file || {},
-			files: request.files || []
+			file: request.file ?? {},
+			files: request.files ?? []
 		};
 		// request handler/controller
 		if (route.getExactRequest) {
@@ -180,7 +180,7 @@ const joiValidatorMethod = async (request: any, route: any) => {
 	if (route.joiSchemaForSwagger.headers && Object.keys(route.joiSchemaForSwagger.headers).length) {
 		const headersObject = Joi.object(route.joiSchemaForSwagger.headers).unknown(true).validate(request.headers);
 		checkJoiValidationError(headersObject);
-		request.headers.authorization = ((headersObject || {}).value || {}).authorization;
+		request.headers.authorization = headersObject?.value?.authorization;
 	}
 	if (route.joiSchemaForSwagger?.formData?.body && Object.keys(route.joiSchemaForSwagger.formData?.body).length) {
 		const formDataObject = Joi.object(route.joiSchemaForSwagger.formData?.body).validate(request.body);
@@ -211,7 +211,7 @@ const createSwaggerUIForRoutes = async (app: any, routes: any[] = []) => {
 		swaggerAuthUsers[SWAGGER_AUTH.USERNAME] = SWAGGER_AUTH.PASSWORD;
 
 		const swaggerOptions = {
-			customSiteTitle: process.env.SWAGGER_TITLE || 'Admin Boilerplate Backend API Documentation'
+			customSiteTitle: process.env.SWAGGER_TITLE ?? 'Admin Boilerplate Backend API Documentation'
 		};
 
 		// Resolve path to Swagger JSON

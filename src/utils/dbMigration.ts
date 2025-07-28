@@ -9,7 +9,7 @@ import path from 'path';
  * Run migrations.
  */
 export default async function runMigrations() {
-	let dbVersion = (await Models.dbVersionModel.findOne({}))?.version ?? 0;
+	const dbVersion = (await Models.dbVersionModel.findOne({}))?.version ?? 0;
 
 	if (!dbVersion) {
 		await Models.adminModel.create({
@@ -21,15 +21,12 @@ export default async function runMigrations() {
 		await Models.dbVersionModel.create({
 			version: Constants.DATABASE_VERSIONS.ONE
 		});
-
-		dbVersion = Constants.DATABASE_VERSIONS.ONE;
 	}
 
 	if (dbVersion < Constants.DATABASE_VERSIONS.TWO) {
 		addInitialData();
 
 		await Models.dbVersionModel.updateOne({}, { $set: { version: Constants.DATABASE_VERSIONS.TWO } });
-		dbVersion = Constants.DATABASE_VERSIONS.TWO;
 	}
 }
 

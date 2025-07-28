@@ -5,6 +5,9 @@ import path from 'path';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import CONFIG from '../config';
 import { ObjectId } from 'mongoose';
+import { createErrorResponse } from '../commons/responseHelpers';
+import { MESSAGES } from '../commons/message';
+import { Constants } from '../commons/constants';
 
 interface FilePayload {
 	fieldname: string;
@@ -29,7 +32,8 @@ export const uploadFileToLocal = async (readableFile: any, filePath: any, pathTo
 		fileWriteStream.write(readableFile.buffer);
 		fileWriteStream.end((err: any) => {
 			if (err) {
-				reject(err);
+				console.log('File upload failed: ', err);
+				reject(createErrorResponse(MESSAGES.FILE_UPLOAD_FAILED, Constants.ERROR_TYPES.BAD_REQUEST));
 			} else {
 				// As api gateway will only forward when file is added.
 				const fileUrl = `${CONFIG.SERVER_URL}/${filePath}`;
@@ -48,7 +52,7 @@ export const uploadFileToLocal = async (readableFile: any, filePath: any, pathTo
 export const uploadManyFiles = async (files: any, userId: string | ObjectId) => {
 	const uploadedFiles = [];
 	for (const file of files) {
-		const fileName = `${userId}_${Date.now()}_${file.originalname}`;
+		const fileName = `${userId.toString()}_${Date.now()}_${file.originalname}`;
 		const relativePath = `public/userFiles/${fileName}`;
 		const basePath = path.join(__dirname, '../../public/userFiles');
 		const filePath = await uploadFileToLocal(file, relativePath, basePath);

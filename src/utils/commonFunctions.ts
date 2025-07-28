@@ -19,8 +19,8 @@ const emailTypes = (payload: any, type: any) => {
 	const EmailStatus: any = {
 		Subject: '',
 		data: {
-			serverUrl: process.env.SERVER_URL || 'https://www.example.xyz',
-			frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000/v1/user/'
+			serverUrl: process.env.SERVER_URL ?? 'https://www.example.xyz',
+			frontendUrl: process.env.FRONTEND_URL ?? 'http://localhost:3000/v1/user/'
 		},
 		template: ''
 	};
@@ -76,7 +76,7 @@ export const sendEmail = async (payload: any, type: number) => {
 
 	let template: HandlebarsTemplateDelegate<any> | string = '';
 	let result = '';
-	if (mailData && mailData.template) {
+	if (mailData?.template) {
 		handlebars.registerHelper('if_lte', function (this: any, a: number, b: number, opts: any) {
 			return a <= b ? opts.fn(this) : opts.inverse(this);
 		});
@@ -122,7 +122,7 @@ export const sendEmailWithSES = async (payload: any, type: number) => {
 
 	let template: HandlebarsTemplateDelegate<any> | string = '';
 	let result = '';
-	if (mailData && mailData.template) {
+	if (mailData?.template) {
 		handlebars.registerHelper('if_lte', function (this: any, a: number, b: number, opts: any) {
 			return a <= b ? opts.fn(this) : opts.inverse(this);
 		});
@@ -137,17 +137,37 @@ export const sendEmailWithSES = async (payload: any, type: number) => {
 		result = template(mailData.data);
 	}
 
+	const destination = {
+		ToAddresses: [] as string[],
+		CcAddresses: [] as string[],
+		BccAddresses: [] as string[]
+	};
+
+	if (Array.isArray(ccEmail)) {
+		destination.CcAddresses = ccEmail;
+	} else if (ccEmail) {
+		destination.CcAddresses = [ ccEmail ];
+	}
+
+	if (Array.isArray(email)) {
+		destination.ToAddresses = email;
+	} else if (email) {
+		destination.ToAddresses = [ email ];
+	}
+
+	if (Array.isArray(bccEmail)) {
+		destination.BccAddresses = bccEmail;
+	} else if (bccEmail) {
+		destination.BccAddresses = [ bccEmail ];
+	}
+
 	const emailParams: SendEmailCommandInput = {
 		Source: config.COMMUNICATION_EMAIL,
-		Destination: {
-			ToAddresses: Array.isArray(email) ? email : [ email ],
-			CcAddresses: ccEmail ? (Array.isArray(ccEmail) ? ccEmail : [ ccEmail ]) : [],
-			BccAddresses: bccEmail ? (Array.isArray(bccEmail) ? bccEmail : [ bccEmail ]) : []
-		},
+		Destination: destination,
 		Message: {
 			Subject: { Data: mailData.Subject },
 			Body: {
-				Html: { Data: result || 'No content provided.' }
+				Html: { Data: result ?? 'No content provided.' }
 			}
 		}
 	};

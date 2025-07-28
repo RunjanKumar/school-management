@@ -233,12 +233,12 @@ class Swagger {
 
 		const swaggerData = fs.readFileSync('swagger.json', 'utf-8');
 		const otherData = JSON.parse(swaggerData);
-		const name = joiDefinitions.model || Date.now();
-		const tag = joiDefinitions.group || 'default';
-		const summary = joiDefinitions.description || 'No desc';
+		const name = joiDefinitions.model ?? Date.now();
+		const tag = joiDefinitions.group ?? 'default';
+		const summary = joiDefinitions.description ?? 'No desc';
 
 		const toSwagger = j2s(joiDefinitions).swagger;
-		if (toSwagger && toSwagger.properties && toSwagger.properties.body) {
+		if (toSwagger?.properties?.body) {
 			this.definitions = {
 				...this.definitions,
 				[name]: toSwagger.properties.body
@@ -248,8 +248,8 @@ class Swagger {
 		const pathArray = path.split('/').filter(Boolean);
 		const transformPath = pathArray
 			.map((pathValue) => {
-				if (pathValue.charAt(0) === ':') {
-					return `/{${pathValue.substr(1)}}`;
+				if (pathValue.startsWith(':')) {
+					return `/{${pathValue.slice(1)}}`;
 				}
 
 				return `/${pathValue}`;
@@ -311,10 +311,10 @@ class Swagger {
 
 		if (formData) {
 			toSwagger.properties.formData.properties = {
-				...(toSwagger.properties.formData.properties.file && toSwagger.properties.formData.properties.file.properties),
-				...(toSwagger.properties.formData.properties.fileArray && toSwagger.properties.formData.properties.fileArray.properties),
-				...(toSwagger.properties.formData.properties.files && toSwagger.properties.formData.properties.files.properties),
-				...(toSwagger.properties.formData.properties.body && toSwagger.properties.formData.properties.body.properties)
+				...(toSwagger.properties.formData.properties.file?.properties ?? {}),
+				...(toSwagger.properties.formData.properties.fileArray?.properties ?? {}),
+				...(toSwagger.properties.formData.properties.files?.properties ?? {}),
+				...(toSwagger.properties.formData.properties.body?.properties ?? {})
 			};
 			const keys = Object.keys(toSwagger.properties.formData.properties).map((key) => key);
 			const requiredFields = toSwagger.properties.formData.required;
@@ -347,7 +347,7 @@ class Swagger {
 			});
 		}
 
-		if (this.paths && this.paths[transformPath]) {
+		if (this.paths?.[transformPath]) {
 			this.paths[transformPath] = {
 				...this.paths[transformPath],
 				[method]: {

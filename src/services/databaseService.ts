@@ -52,7 +52,7 @@ const dbService: DbService = {
 	},
 
 	findOneAndDelete: async <T extends Document>(model: Model<T>, criteria: FilterQuery<T>): Promise<T | null> => {
-		return (await model.findOneAndDelete(criteria)) as T | null;
+		return await model.findOneAndDelete(criteria);
 	},
 
 	updateMany: async <T extends Document>(model: Model<T>, criteria: FilterQuery<T>, dataToUpdate: UpdateQuery<T>): Promise<void> => {
@@ -66,7 +66,7 @@ const dbService: DbService = {
 
 	deleteMany: async <T extends Document>(model: Model<T>, criteria: FilterQuery<T>): Promise<number> => {
 		const result = await model.deleteMany(criteria);
-		return result.deletedCount || 0;
+		return result.deletedCount ?? 0;
 	},
 
 	aggregate: async <T extends Document>(model: Model<T>, query: any[]): Promise<any[]> => {

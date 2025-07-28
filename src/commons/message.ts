@@ -104,5 +104,7 @@ export const MESSAGES = {
 
 	// file upload related messages
 	FILE_UPLOAD_SUCCESS: 'File uploaded successfully.',
-	FILE_REQUIRED_IN_PAYLOAD: 'File is required in the payload.'
+	FILE_REQUIRED_IN_PAYLOAD: 'File is required in the payload.',
+	FILE_UPLOAD_FAILED: 'File upload failed.',
+	FILE_UPLOAD_ERROR: 'File upload error.'
 };

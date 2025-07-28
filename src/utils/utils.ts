@@ -14,7 +14,7 @@ import { SignedToken } from '../commons/interfaces';
  */
 
 const parseTemplate = (str: string, replacementArray: Array<{ base: string; replacement: string }>) => {
-	if (!replacementArray || !replacementArray.length) {
+	if (!replacementArray?.length) {
 		return str;
 	}
 	let result = str;
@@ -82,7 +82,7 @@ const generateJWTToken = (userId: string, expirationTime: number): SignedToken =
 		sessionKey // special session key to maintain session
 	};
 
-	return { sessionKey, token: jwt.sign(payload, process.env.JWT_SECRET || 'secret', { expiresIn: expirationTime }) };
+	return { sessionKey, token: jwt.sign(payload, process.env.JWT_SECRET ?? 'secret', { expiresIn: expirationTime }) };
 };
 
 /**
@@ -97,7 +97,7 @@ const generateSecuredToken = (field: string): string => {
 		field: field
 	};
 
-	return jwt.sign(payload, process.env.JWT_SECRET || 'secret', { expiresIn: '1h' });
+	return jwt.sign(payload, process.env.JWT_SECRET ?? 'secret', { expiresIn: '1h' });
 };
 
 /**
@@ -108,7 +108,7 @@ const generateSecuredToken = (field: string): string => {
  * @throws An error if the token is invalid or verification fails.
  */
 const decryptJWTToken = (token: string): any => {
-	return jwt.verify(token, process.env.JWT_SECRET || ('secret' as string));
+	return jwt.verify(token, process.env.JWT_SECRET ?? ('secret' as string));
 };
 
 /**
