@@ -41,7 +41,7 @@ const RESPONSE: any = {
  * @param data optional data to be included in the response object.
  */
 function createSuccessResponse(message: string, data?: any): ResponseObject {
-	message = message || 'Success';
+	message = message ?? 'Success';
 	return RESPONSE.SUCCESS(message, data);
 }
 
@@ -52,7 +52,7 @@ function createSuccessResponse(message: string, data?: any): ResponseObject {
  * @param data optional data to be included in the response object.
  */
 function createErrorResponse(message: string, errorType: any, data?: any): ResponseObject {
-	message = message || 'Error occurred';
+	message = message ?? 'Error occurred';
 	return RESPONSE.ERROR(errorType, message, data);
 }
 

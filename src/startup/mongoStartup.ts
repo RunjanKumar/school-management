@@ -3,7 +3,7 @@ import config from '../config';
 
 const connectToDatabase = async () => {
 	try {
-		const connectionString = config.DB.DATABASE_URI || 'mongodb://localhost:27017/test';
+		const connectionString = config.DB.DATABASE_URI ?? 'mongodb://localhost:27017/test';
 		console.log('Connecting to MongoDB...', connectionString);
 		await mongoose.connect(connectionString, {
 			serverSelectionTimeoutMS: 30000,

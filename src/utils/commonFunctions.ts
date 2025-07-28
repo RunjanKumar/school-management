@@ -19,8 +19,8 @@ const emailTypes = (payload: any, type: any) => {
 	const EmailStatus: any = {
 		Subject: '',
 		data: {
-			serverUrl: process.env.SERVER_URL || 'https://www.example.xyz',
-			frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000/v1/user/'
+			serverUrl: process.env.SERVER_URL ?? 'https://www.example.xyz',
+			frontendUrl: process.env.FRONTEND_URL ?? 'http://localhost:3000/v1/user/'
 		},
 		template: ''
 	};
@@ -147,7 +147,7 @@ export const sendEmailWithSES = async (payload: any, type: number) => {
 		Message: {
 			Subject: { Data: mailData.Subject },
 			Body: {
-				Html: { Data: result || 'No content provided.' }
+				Html: { Data: result ?? 'No content provided.' }
 			}
 		}
 	};
