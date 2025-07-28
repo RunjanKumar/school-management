@@ -137,13 +137,33 @@ export const sendEmailWithSES = async (payload: any, type: number) => {
 		result = template(mailData.data);
 	}
 
+	const destination = {
+		ToAddresses: [] as string[],
+		CcAddresses: [] as string[],
+		BccAddresses: [] as string[]
+	};
+
+	if (Array.isArray(ccEmail)) {
+		destination.CcAddresses = ccEmail;
+	} else if (ccEmail) {
+		destination.CcAddresses = [ ccEmail ];
+	}
+
+	if (Array.isArray(email)) {
+		destination.ToAddresses = email;
+	} else if (email) {
+		destination.ToAddresses = [ email ];
+	}
+
+	if (Array.isArray(bccEmail)) {
+		destination.BccAddresses = bccEmail;
+	} else if (bccEmail) {
+		destination.BccAddresses = [ bccEmail ];
+	}
+
 	const emailParams: SendEmailCommandInput = {
 		Source: config.COMMUNICATION_EMAIL,
-		Destination: {
-			ToAddresses: Array.isArray(email) ? email : [ email ],
-			CcAddresses: ccEmail ? (Array.isArray(ccEmail) ? ccEmail : [ ccEmail ]) : [],
-			BccAddresses: bccEmail ? (Array.isArray(bccEmail) ? bccEmail : [ bccEmail ]) : []
-		},
+		Destination: destination,
 		Message: {
 			Subject: { Data: mailData.Subject },
 			Body: {
