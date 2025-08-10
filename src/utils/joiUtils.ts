@@ -7,7 +7,7 @@ import { Constants } from '../commons/constants';
 const joiUtils: any = {
 	Joi: Joi.extend((joi) => ({
 		type: 'string',
-		base: joi.string(),
+		base: joi.string().allow(''),
 		messages: {
 			'string.objectId': '{{#label}} must be a valid id',
 			'string.phoneNumber': MESSAGES.PHONE_NUMBER_VALIDATION_FAILED,
