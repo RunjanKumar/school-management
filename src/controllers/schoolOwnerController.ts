@@ -140,20 +140,42 @@ async function listSchoolOwners(payload: any) {
 							name: 1,
 							email: 1,
 							contactNumber: 1,
+							alternateContactNumber: 1,
 							isEnabled: 1,
 							createdAt: 1
 						}
 					}
 				],
-				count: [ { $count: 'count' } ]
+				stats: [
+					{ $group: {
+						_id: 1,
+						count: { $sum: 1 },
+						activeUsers: { $sum: { $cond: {
+							if: { $eq: [ '$isEnabled', true ] },
+							then: 1,
+							else: 0
+						} } },
+						inactiveUsers: { $sum: { $cond: {
+							if: { $eq: [ '$isEnabled', false ] },
+							then: 1,
+							else: 0
+						} } }
+					} }
+				]
 			}
 		},
-		{ $addFields: { count: { $ifNull: [ { $first: '$count.count' }, 0 ] } } }
+		{ $addFields: {
+			count: { $ifNull: [ { $first: '$stats.count' }, 0 ] },
+			activeUsers: { $ifNull: [ { $first: '$stats.activeUsers' }, 0 ] },
+			inactiveUsers: { $ifNull: [ { $first: '$stats.inactiveUsers' }, 0 ] }
+		} }
 	]);
 
 	return createSuccessResponse(MESSAGES.SCHOOL_OWNERS_LISTED, {
 		data: schoolOwners[0]?.data ?? [],
-		count: schoolOwners[0]?.count ?? 0
+		count: schoolOwners[0]?.count ?? 0,
+		activeUsers: schoolOwners[0]?.activeUsers ?? 0,
+		inactiveUsers: schoolOwners[0]?.inactiveUsers ?? 0
 	});
 }
 
