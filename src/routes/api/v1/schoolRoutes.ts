@@ -15,13 +15,13 @@ const routes: any = [
 			body: {
 				name: Joi.string().required().description('Name of the school'),
 				shortName: Joi.string().optional().description('Short name or abbreviation of the school'),
-				logo: Joi.string().uri().optional().description('URL to the school\'s logo'),
+				logo: Joi.string().optional().description('URL to the school\'s logo'),
 				description: Joi.string().optional().description('A brief description of the school'),
 				establishedYear: Joi.number().min(1800).yearNotInFuture().optional().description('Year the school was established'),
 
 				email: Joi.string().email().lowercase().required().description('Email of the school'),
 				contactNumber: Joi.string().required().description('Contact number of the school'),
-				website: Joi.string().uri().optional().description('Website of the school'),
+				website: Joi.string().optional().description('Website of the school'),
 
 				address: Joi.object()
 					.keys({
@@ -53,7 +53,7 @@ const routes: any = [
 					.optional()
 					.description('Type of school'),
 				educationalLevels: Joi.array().items(Joi.string().mongoId()).required().description('Educational levels offered by the school'),
-				bannerImages: Joi.array().items(Joi.string().uri()).optional().description('URLs to banner images of the school')
+				bannerImages: Joi.array().items(Joi.string()).optional().description('URLs to banner images of the school')
 			},
 			group: 'School',
 			description: 'API to create a school.',
@@ -73,13 +73,13 @@ const routes: any = [
 				schoolId: Joi.string().mongoId().required().description('School ID'),
 				name: Joi.string().required().description('Name of the school'),
 				shortName: Joi.string().optional().description('Short name or abbreviation of the school'),
-				logo: Joi.string().uri().optional().description('URL to the school\'s logo'),
+				logo: Joi.string().optional().description('URL to the school\'s logo'),
 				description: Joi.string().optional().description('A brief description of the school'),
 				establishedYear: Joi.number().min(1800).yearNotInFuture().optional().description('Year the school was established'),
 
 				email: Joi.string().email().lowercase().required().description('Email of the school'),
 				contactNumber: Joi.string().phoneNumber().required().description('Contact number of the school'),
-				website: Joi.string().uri().optional().description('Website of the school'),
+				website: Joi.string().optional().description('Website of the school'),
 
 				address: Joi.object()
 					.keys({
@@ -109,7 +109,7 @@ const routes: any = [
 					.optional()
 					.description('Type of school'),
 				educationalLevels: Joi.array().items(Joi.string().mongoId()).required().description('Educational levels offered by the school'),
-				bannerImages: Joi.array().items(Joi.string().uri()).optional().description('URLs to banner images of the school')
+				bannerImages: Joi.array().items(Joi.string()).optional().description('URLs to banner images of the school')
 			},
 			group: 'School',
 			description: 'API to update a school.',
