@@ -147,28 +147,40 @@ async function listSchoolOwners(payload: any) {
 					}
 				],
 				stats: [
-					{ $group: {
-						_id: 1,
-						count: { $sum: 1 },
-						activeUsers: { $sum: { $cond: {
-							if: { $eq: [ '$isEnabled', true ] },
-							then: 1,
-							else: 0
-						} } },
-						inactiveUsers: { $sum: { $cond: {
-							if: { $eq: [ '$isEnabled', false ] },
-							then: 1,
-							else: 0
-						} } }
-					} }
+					{
+						$group: {
+							_id: 1,
+							count: { $sum: 1 },
+							activeUsers: {
+								$sum: {
+									$cond: {
+										if: { $eq: [ '$isEnabled', true ] },
+										then: 1,
+										else: 0
+									}
+								}
+							},
+							inactiveUsers: {
+								$sum: {
+									$cond: {
+										if: { $eq: [ '$isEnabled', false ] },
+										then: 1,
+										else: 0
+									}
+								}
+							}
+						}
+					}
 				]
 			}
 		},
-		{ $addFields: {
-			count: { $ifNull: [ { $first: '$stats.count' }, 0 ] },
-			activeUsers: { $ifNull: [ { $first: '$stats.activeUsers' }, 0 ] },
-			inactiveUsers: { $ifNull: [ { $first: '$stats.inactiveUsers' }, 0 ] }
-		} }
+		{
+			$addFields: {
+				count: { $ifNull: [ { $first: '$stats.count' }, 0 ] },
+				activeUsers: { $ifNull: [ { $first: '$stats.activeUsers' }, 0 ] },
+				inactiveUsers: { $ifNull: [ { $first: '$stats.inactiveUsers' }, 0 ] }
+			}
+		}
 	]);
 
 	return createSuccessResponse(MESSAGES.SCHOOL_OWNERS_LISTED, {
