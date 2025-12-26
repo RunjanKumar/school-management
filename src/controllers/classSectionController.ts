@@ -9,6 +9,7 @@ async function createClassSection(payload: any) {
 	const existing = await dbService.findOne(classSectionModel, {
 		name: payload.name,
 		classId: payload.classId,
+		schoolId: payload.schoolId,
 		isDeleted: false
 	});
 
@@ -19,6 +20,7 @@ async function createClassSection(payload: any) {
 	const created = await dbService.create(classSectionModel, {
 		name: payload.name,
 		classId: payload.classId,
+		schoolId: payload.schoolId,
 		sectionHeadTeacherId: payload.sectionHeadTeacherId,
 		capacity: payload.capacity
 	});
