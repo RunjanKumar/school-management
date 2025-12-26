@@ -114,7 +114,7 @@ async function deleteClassSection(payload: any) {
 
 	await dbService.updateOne(classSectionModel, { _id: { $in: payload.classSectionIds } }, { $set: { isDeleted: true } });
 
-	return createSuccessResponse(payload.schoolIds.length > 1 ? MESSAGES.CLASS_SECTIONS_DELETED : MESSAGES.CLASS_SECTION_DELETED);
+	return createSuccessResponse(payload.classSectionIds.length > 1 ? MESSAGES.CLASS_SECTIONS_DELETED : MESSAGES.CLASS_SECTION_DELETED);
 }
 
 export const classSectionController = {
