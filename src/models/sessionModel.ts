@@ -1,8 +1,18 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Types, Document } from 'mongoose';
 import { Constants } from '../commons/constants';
-import { SessionInterface } from '../interfaces';
 
-const sessionSchema: Schema<SessionInterface> = new Schema(
+export interface ISession extends Document {
+	_id: Types.ObjectId;
+	createdAt: Date;
+	updatedAt: Date;
+	userId: Types.ObjectId;
+	refPath: string;
+	type: number;
+	token: string;
+	expirationTime: Date;
+}
+
+const sessionSchema: Schema<ISession> = new Schema(
 	{
 		userId: {
 			type: Schema.Types.ObjectId,
@@ -34,4 +44,4 @@ const sessionSchema: Schema<SessionInterface> = new Schema(
 	}
 );
 
-export default mongoose.model<SessionInterface>('sessions', sessionSchema);
+export default mongoose.model<ISession>('sessions', sessionSchema);

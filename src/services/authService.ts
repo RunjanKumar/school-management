@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express';
-import { AuthenticatedRequestInterface } from '../interfaces';
+import { IAuthenticatedRequest } from '../commons/interfaces';
 import { createErrorResponse } from '../commons/responseHelpers';
 import { Constants } from '../commons/constants';
 import { Utils } from '../utils/utils';
@@ -27,7 +27,7 @@ authService.validateAuth = (auth: number, allowWithoutSetPassword: boolean = fal
 	case Constants.AVAILABLE_AUTHS.ADMIN_AND_SCHOOL_OWNER:
 		return authService.adminAndSchoolOwnerValidate();
 	default:
-		return (request: AuthenticatedRequestInterface, response: Response, next: NextFunction) => {
+		return (request: IAuthenticatedRequest, response: Response, next: NextFunction) => {
 			next();
 		};
 	}
@@ -35,11 +35,11 @@ authService.validateAuth = (auth: number, allowWithoutSetPassword: boolean = fal
 
 /**
  * Validate admin
- * @param {AuthenticatedRequestInterface} request - Request object
+ * @param {IAuthenticatedRequest} request - Request object
  * @returns {Promise<boolean>} - True if admin is valid, false otherwise
  */
 authService.adminValidate = () => {
-	return (request: AuthenticatedRequestInterface, response: Response, next: NextFunction) => {
+	return (request: IAuthenticatedRequest, response: Response, next: NextFunction) => {
 		validateAdmin(request)
 			.then((result) => {
 				if (result) {
@@ -58,11 +58,11 @@ authService.adminValidate = () => {
 
 /**
  * Validate admin forgot password
- * @param {AuthenticatedRequestInterface} request - Request object
+ * @param {IAuthenticatedRequest} request - Request object
  * @returns {Promise<boolean>} - True if admin is valid, false otherwise
  */
 authService.adminForgotPasswordValidate = () => {
-	return (request: AuthenticatedRequestInterface, response: Response, next: NextFunction) => {
+	return (request: IAuthenticatedRequest, response: Response, next: NextFunction) => {
 		validateAdminForgotPassword(request)
 			.then((result) => {
 				if (result) {
@@ -81,11 +81,11 @@ authService.adminForgotPasswordValidate = () => {
 
 /**
  * Validate school owner
- * @param {AuthenticatedRequestInterface} request - Request object
+ * @param {IAuthenticatedRequest} request - Request object
  * @returns {Promise<boolean>} - True if school owner is valid, false otherwise
  */
 authService.schoolOwnerValidate = (allowWithoutSetPassword: boolean = false) => {
-	return (request: AuthenticatedRequestInterface, response: Response, next: NextFunction) => {
+	return (request: IAuthenticatedRequest, response: Response, next: NextFunction) => {
 		validateSchoolOwner(request)
 			.then((result) => {
 				if (result) {
@@ -104,11 +104,11 @@ authService.schoolOwnerValidate = (allowWithoutSetPassword: boolean = false) => 
 
 /**
  * Validate school owner forgot password
- * @param {AuthenticatedRequestInterface} request - Request object
+ * @param {IAuthenticatedRequest} request - Request object
  * @returns {Promise<boolean>} - True if school owner is valid, false otherwise
  */
 authService.schoolOwnerForgotPasswordValidate = () => {
-	return (request: AuthenticatedRequestInterface, response: Response, next: NextFunction) => {
+	return (request: IAuthenticatedRequest, response: Response, next: NextFunction) => {
 		validateSchoolOwnerForgotPassword(request)
 			.then((result) => {
 				if (result) {
@@ -127,11 +127,11 @@ authService.schoolOwnerForgotPasswordValidate = () => {
 
 /**
  * Validate admin and school owner
- * @param {AuthenticatedRequestInterface} request - Request object
+ * @param {IAuthenticatedRequest} request - Request object
  * @returns {Promise<boolean>} - True if admin and school owner is valid, false otherwise
  */
 authService.adminAndSchoolOwnerValidate = () => {
-	return (request: AuthenticatedRequestInterface, response: Response, next: NextFunction) => {
+	return (request: IAuthenticatedRequest, response: Response, next: NextFunction) => {
 		validateAdminAndSchoolOwner(request).then((result) => {
 			if (result) {
 				return next();
@@ -142,10 +142,10 @@ authService.adminAndSchoolOwnerValidate = () => {
 
 /**
  * Validate admin
- * @param {AuthenticatedRequestInterface} request - Request object
+ * @param {IAuthenticatedRequest} request - Request object
  * @returns {Promise<boolean>} - True if admin is valid, false otherwise
  */
-const validateAdmin = async (request: AuthenticatedRequestInterface) => {
+const validateAdmin = async (request: IAuthenticatedRequest) => {
 	const token = request.headers.authorization;
 
 	if (!token) {
@@ -184,10 +184,10 @@ const validateAdmin = async (request: AuthenticatedRequestInterface) => {
 
 /**
  * Validate admin forgot password
- * @param {AuthenticatedRequestInterface} request - Request object
+ * @param {IAuthenticatedRequest} request - Request object
  * @returns {Promise<boolean>} - True if admin is valid, false otherwise
  */
-const validateAdminForgotPassword = async (request: AuthenticatedRequestInterface) => {
+const validateAdminForgotPassword = async (request: IAuthenticatedRequest) => {
 	const token = request.headers.authorization;
 
 	if (!token) {
@@ -224,7 +224,7 @@ const validateAdminForgotPassword = async (request: AuthenticatedRequestInterfac
 	return true;
 };
 
-const validateSchoolOwner = async (request: AuthenticatedRequestInterface, allowWithoutSetPassword: boolean = false) => {
+const validateSchoolOwner = async (request: IAuthenticatedRequest, allowWithoutSetPassword: boolean = false) => {
 	const token = request.headers.authorization;
 
 	if (!token) {
@@ -263,7 +263,7 @@ const validateSchoolOwner = async (request: AuthenticatedRequestInterface, allow
 	return true;
 };
 
-const validateSchoolOwnerForgotPassword = async (request: AuthenticatedRequestInterface) => {
+const validateSchoolOwnerForgotPassword = async (request: IAuthenticatedRequest) => {
 	const token = request.headers.authorization;
 
 	if (!token) {
@@ -300,7 +300,7 @@ const validateSchoolOwnerForgotPassword = async (request: AuthenticatedRequestIn
 	return true;
 };
 
-const validateAdminAndSchoolOwner = async (request: AuthenticatedRequestInterface) => {
+const validateAdminAndSchoolOwner = async (request: IAuthenticatedRequest) => {
 	const token = request.headers.authorization;
 
 	if (!token) {

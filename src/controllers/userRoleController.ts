@@ -1,10 +1,12 @@
 import { createSuccessResponse, createErrorResponse } from '../commons/responseHelpers';
 import { MESSAGES } from '../commons/message';
 import { Constants } from '../commons/constants';
-import { schoolModel, userRoleModel } from '../models';
+import { schoolModel, IUserRole, userRoleModel } from '../models';
 import dbService from '../services/databaseService';
-import { UserRoleSchoolPermissions } from '../interfaces';
+import { IUserRoleSchoolPermissions } from '../models';
 import { Types } from 'mongoose';
+import { IRegexSearch } from '../commons/interfaces';
+import { Utils } from '../utils/utils';
 
 /**
  * Creates a new user role
@@ -27,7 +29,7 @@ async function createUserRole(payload: any) {
 
 	// Validate schoolPermissions
 	const existingSchools = await dbService.count(schoolModel, {
-		_id: { $in: payload.schoolPermissions.map((permission: UserRoleSchoolPermissions) => permission.schoolId) },
+		_id: { $in: payload.schoolPermissions.map((permission: IUserRoleSchoolPermissions) => permission.schoolId) },
 		isDeleted: false
 	});
 
@@ -63,18 +65,18 @@ async function updateUserRole(payload: any) {
 	}
 
 	if (payload.name && payload.name !== role.name) {
-		const existing = await dbService.findOne(userRoleModel, {
+		const existingUserRole: IUserRole | null = await dbService.findOne(userRoleModel, {
 			name: payload.name,
 			isDeleted: false
 		});
-		if (existing) {
+		if (existingUserRole) {
 			throw createErrorResponse(MESSAGES.USER_ROLE_ALREADY_EXISTS, Constants.ERROR_TYPES.ALREADY_EXISTS);
 		}
 	}
 
 	// Validate schoolPermissions
 	const existingSchools = await dbService.count(schoolModel, {
-		_id: { $in: payload.schoolPermissions.map((permission: UserRoleSchoolPermissions) => permission.schoolId) },
+		_id: { $in: payload.schoolPermissions.map((permission: IUserRoleSchoolPermissions) => permission.schoolId) },
 		isDeleted: false
 	});
 
@@ -108,14 +110,20 @@ async function updateUserRole(payload: any) {
  * @returns {Object} The user roles
  */
 async function getUserRoles(payload: any) {
-	const matchCriteria: Record<string, boolean | Types.ObjectId | { $regex: string; $options: string }> = { isDeleted: false };
+	const matchCriteria: {
+		isDeleted: boolean;
+		_id?: Types.ObjectId;
+		name?: IRegexSearch;
+	} = {
+		isDeleted: false
+	};
 
 	if (payload.userRoleId) {
 		matchCriteria._id = payload.userRoleId;
 	}
 
 	if (payload.searchString) {
-		matchCriteria.name = { $regex: payload.searchString, $options: 'i' };
+		matchCriteria.name = Utils.aggregateSearchRegex(payload.searchString);
 	}
 
 	const data = await dbService.aggregate(userRoleModel, [

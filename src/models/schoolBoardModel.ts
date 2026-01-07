@@ -1,8 +1,17 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 import { Constants } from '../commons/constants';
-import { SchoolBoardInterface } from '../interfaces';
 
-const SchoolBoardSchema: Schema<SchoolBoardInterface> = new Schema(
+type SchoolBoardType = (typeof Constants.SCHOOL_BOARD_TYPES)[keyof typeof Constants.SCHOOL_BOARD_TYPES];
+
+export interface ISchoolBoard extends Document {
+	type: SchoolBoardType;
+	name: string;
+	isDeleted?: boolean;
+	createdAt?: Date;
+	updatedAt?: Date;
+}
+
+const SchoolBoardSchema: Schema<ISchoolBoard> = new Schema(
 	{
 		type: {
 			type: Number,
@@ -25,4 +34,4 @@ const SchoolBoardSchema: Schema<SchoolBoardInterface> = new Schema(
 	}
 );
 
-export default mongoose.model<SchoolBoardInterface>('schoolBoards', SchoolBoardSchema);
+export default mongoose.model<ISchoolBoard>('schoolBoards', SchoolBoardSchema);

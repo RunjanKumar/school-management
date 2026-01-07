@@ -1,7 +1,13 @@
-import mongoose, { Schema } from 'mongoose';
-import { SchoolEducationLevelInterface } from '../interfaces';
+import mongoose, { Schema, Document } from 'mongoose';
 
-const SchoolEducationLevelSchema: Schema<SchoolEducationLevelInterface> = new Schema(
+export interface ISchoolEducationLevel extends Document {
+	name: string;
+	isDeleted?: boolean;
+	createdAt?: Date;
+	updatedAt?: Date;
+}
+
+const SchoolEducationLevelSchema: Schema<ISchoolEducationLevel> = new Schema(
 	{
 		name: {
 			type: String,
@@ -19,4 +25,4 @@ const SchoolEducationLevelSchema: Schema<SchoolEducationLevelInterface> = new Sc
 	}
 );
 
-export default mongoose.model<SchoolEducationLevelInterface>('schoolEducationLevels', SchoolEducationLevelSchema);
+export default mongoose.model<ISchoolEducationLevel>('schoolEducationLevels', SchoolEducationLevelSchema);

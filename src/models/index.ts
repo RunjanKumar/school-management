@@ -10,4 +10,18 @@ import userRoleModel from './userRoleModel';
 import { classModel } from './classModel';
 import { classSectionModel } from './classSectionModel';
 
+// Export models
 export { adminModel, dbVersionModel, sessionModel, schoolOwnerModel, schoolModel, schoolBoardModel, schoolMediumModel, schoolEducationLevelModel, userRoleModel, classModel, classSectionModel };
+
+// Export interfaces
+export type { IAdmin } from './adminModel';
+export type { IDBVersion } from './dbVersionModel';
+export type { ISession } from './sessionModel';
+export type { ISchoolOwner } from './schoolOwnerModel';
+export type { ISchool } from './schoolModel';
+export type { ISchoolBoard } from './schoolBoardModel';
+export type { ISchoolMedium } from './schoolMediumModel';
+export type { ISchoolEducationLevel } from './schoolEducationLevelModel';
+export type { IUserRole, IUserRoleSchoolPermissions } from './userRoleModel';
+export type { IClass } from './classModel';
+export type { IClassSection } from './classSectionModel';

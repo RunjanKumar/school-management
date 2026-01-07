@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { Constants } from '../commons/constants';
 import mongoose from 'mongoose';
-import { SignedToken } from '../commons/interfaces';
+import { SignedToken, IRegexSearch } from '../commons/interfaces';
 
 /**
  * Replaces all occurrences of specified substrings in a string with their corresponding replacements.
@@ -197,6 +197,16 @@ const generateRandomPassword = (): string => {
 	return passwordArray.join('');
 };
 
+/**
+ * Generates a regex search object for MongoDB aggregation.
+ *
+ * @param search - The search string to generate the regex for.
+ * @returns A regex search object.
+ */
+const aggregateSearchRegex = (search: string | undefined): IRegexSearch => {
+	return { $regex: search ?? '', $options: 'i' };
+};
+
 export const Utils = {
 	parseTemplate,
 	hashPassword,
@@ -210,5 +220,6 @@ export const Utils = {
 	hashOTP,
 	compareOTP,
 	capitalizeFirstLetter,
-	generateRandomPassword
+	generateRandomPassword,
+	aggregateSearchRegex
 };

@@ -40,11 +40,11 @@ export default {
 		SENDER: process.env.SENDER_EMAIL ?? 'test.user@yopmail.com'
 	},
 	S3_BUCKET: {
-		region: process.env.S3_REGION ?? 'region',
-		accessKeyId: process.env.S3_ACCESS_KEY_ID ?? 'access-key-id',
-		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? 'secret-access-key',
-		bucketName: process.env.S3_BUCKET_NAME ?? 'bucket-name',
-		cloudfrontUrl: process.env.CLOUDFRONT_URL ?? 'cloudfront-url'
+		REGION: process.env.S3_REGION ?? 'region',
+		ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID ?? 'access-key-id',
+		SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY ?? 'secret-access-key',
+		BUCKET_NAME: process.env.S3_BUCKET_NAME ?? 'bucket-name',
+		CLOUDFRONT_URL: process.env.CLOUDFRONT_URL ?? 'cloudfront-url'
 	},
 	ADMIN_CRED: {
 		NAME: process.env.ADMIN_NAME ?? 'Admin',

@@ -4,6 +4,8 @@ import { schoolOwnerModel, sessionModel } from '../models';
 import { Constants } from '../commons/constants';
 import { Utils } from '../utils/utils';
 import { MESSAGES } from '../commons/message';
+import { Types } from 'mongoose';
+import { IRegexSearch } from '../commons/interfaces';
 
 /**
  * Creates a new school owner in the system
@@ -120,10 +122,20 @@ async function updateSchoolOwner(payload: any) {
  * @throws {Object} Error response if school owners retrieval fails
  */
 async function listSchoolOwners(payload: any) {
-	const matchCriteria: Record<string, boolean | Record<string, Record<string, string>>[]> = { isDeleted: false };
+	const matchCriteria: {
+		isDeleted: boolean;
+		_id?: Types.ObjectId;
+		$or?: {
+			name?: IRegexSearch;
+			email?: IRegexSearch;
+			contactNumber?: IRegexSearch;
+		}[];
+	} = {
+		isDeleted: false
+	};
 
 	if (payload.searchString) {
-		matchCriteria.$or = [ { name: { $regex: payload.searchString, $options: 'i' } }, { email: { $regex: payload.searchString, $options: 'i' } }, { contactNumber: { $regex: payload.searchString, $options: 'i' } } ];
+		matchCriteria.$or = [ { name: Utils.aggregateSearchRegex(payload.searchString) }, { email: Utils.aggregateSearchRegex(payload.searchString) }, { contactNumber: Utils.aggregateSearchRegex(payload.searchString) } ];
 	}
 
 	const schoolOwners = await dbService.aggregate(schoolOwnerModel, [

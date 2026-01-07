@@ -4,7 +4,19 @@ import { Constants } from '../commons/constants';
 import { classModel } from '../models';
 import dbService from '../services/databaseService';
 import { Types } from 'mongoose';
+import { IRegexSearch } from '../commons/interfaces';
+import { Utils } from '../utils/utils';
 
+/**
+ * Creates a new class.
+ * @param payload - The payload containing the class details.
+ * @param {string} payload.name - The name of the class.
+ * @param {string} payload.schoolId - The ID of the school to which the class belongs.
+ * @param {string} payload.description - The description of the class.
+ * @param {number} payload.capacity - The capacity of the class.
+ * @returns {Object} The created class.
+ * @throws {Object} Error response if the class already exists or creation fails.
+ */
 async function createClass(payload: any) {
 	const existingClass = await dbService.findOne(classModel, {
 		name: payload.name,
@@ -26,6 +38,16 @@ async function createClass(payload: any) {
 	return createSuccessResponse(MESSAGES.CLASS_CREATED, { class: createdClass });
 }
 
+/**
+ * Updates a class.
+ * @param payload - The payload containing the class details.
+ * @param {string} payload.classId - The ID of the class to update.
+ * @param {string} payload.name - The name of the class.
+ * @param {string} payload.description - The description of the class.
+ * @param {number} payload.capacity - The capacity of the class.
+ * @returns {Object} The updated class.
+ * @throws {Object} Error response if the class already exists or update fails.
+ */
 async function updateClass(payload: any) {
 	const existingClass = await dbService.findOne(classModel, {
 		_id: payload.classId,
@@ -62,17 +84,29 @@ async function updateClass(payload: any) {
 	return createSuccessResponse(MESSAGES.CLASS_UPDATED);
 }
 
+/**
+ * Gets classes by school.
+ * @param payload - The payload containing the school ID and search criteria.
+ * @param {string} payload.schoolId - The ID of the school to get classes for.
+ * @param {string} payload.name - The name of the class to search for.
+ * @returns {Object} The classes.
+ * @throws {Object} Error response if the classes are not found.
+ */
 async function getClassesBySchool(payload: any) {
-	const match: any = {
-		schoolId: new Types.ObjectId(payload.schoolId),
+	const matchCriteria: {
+		isDeleted: boolean;
+		schoolId: Types.ObjectId;
+		name?: IRegexSearch;
+	} = {
+		schoolId: payload.schoolId,
 		isDeleted: false
 	};
 	if (payload.name) {
-		match.name = { $regex: payload.name, $options: 'i' }; // \
+		matchCriteria.name = Utils.aggregateSearchRegex(payload.name);
 	}
 
 	const data = await dbService.aggregate(classModel, [
-		{ $match: match },
+		{ $match: matchCriteria },
 		{
 			$facet: {
 				data: [
@@ -101,6 +135,13 @@ async function getClassesBySchool(payload: any) {
 	});
 }
 
+/**
+ * Deletes a class.
+ * @param payload - The payload containing the class IDs to delete.
+ * @param {string[]} payload.classIds - The IDs of the classes to delete.
+ * @returns {Object} The deleted class.
+ * @throws {Object} Error response if the classes are not found or deletion fails.
+ */
 async function deleteClass(payload: any) {
 	console.log('Deleting class with ID:', payload);
 	const existingClasses = await dbService.count(classModel, {

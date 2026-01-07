@@ -1,7 +1,16 @@
-import mongoose, { Schema } from 'mongoose';
-import { ClassInterface } from '../interfaces';
+import mongoose, { Schema, Types, Document } from 'mongoose';
 
-const classSchema: Schema<ClassInterface> = new Schema(
+export interface IClass extends Document {
+	name: string;
+	schoolId: Types.ObjectId;
+	description?: string;
+	capacity?: number;
+	isDeleted: boolean;
+	createdAt: Date;
+	updatedAt: Date;
+}
+
+const classSchema: Schema<IClass> = new Schema(
 	{
 		name: {
 			type: String,
@@ -34,4 +43,4 @@ const classSchema: Schema<ClassInterface> = new Schema(
 	}
 );
 
-export const classModel = mongoose.model<ClassInterface>('classes', classSchema);
+export const classModel = mongoose.model<IClass>('classes', classSchema);

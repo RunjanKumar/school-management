@@ -1,9 +1,8 @@
 import dbService from '../services/databaseService';
 import { createErrorResponse, createSuccessResponse } from '../commons/responseHelpers';
-import { adminModel, sessionModel } from '../models';
+import { adminModel, sessionModel, IAdmin } from '../models';
 import { Constants } from '../commons/constants';
 import { Utils } from '../utils/utils';
-import { AdminInterface } from '../interfaces';
 import { sendEmailWithSES } from '../utils/commonFunctions';
 import config from '../config';
 import { MESSAGES } from '../commons/message';
@@ -19,7 +18,7 @@ import { MESSAGES } from '../commons/message';
  */
 async function loginAdmin(payload: any) {
 	// fetch admin
-	const admin: AdminInterface | null = await dbService.findOne(adminModel, {
+	const admin: IAdmin | null = await dbService.findOne(adminModel, {
 		email: payload.email,
 		isDeleted: false
 	});
@@ -92,7 +91,7 @@ async function logoutAdmin(payload: any) {
  * @throws {Object} Error response if admin not found or email sending fails
  */
 async function forgotAdminPassword(payload: any) {
-	const admin: AdminInterface | null = await dbService.findOne(adminModel, { email: payload.email });
+	const admin: IAdmin | null = await dbService.findOne(adminModel, { email: payload.email });
 
 	if (!admin) {
 		throw createErrorResponse(MESSAGES.ADMIN_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);

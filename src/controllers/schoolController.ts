@@ -1,8 +1,11 @@
 import { Constants } from '../commons/constants';
 import { MESSAGES } from '../commons/message';
-import { schoolModel, schoolBoardModel, schoolMediumModel, schoolEducationLevelModel } from '../models';
+import { schoolModel, schoolBoardModel, schoolMediumModel, schoolEducationLevelModel, ISchool } from '../models';
 import dbService from '../services/databaseService';
 import { createErrorResponse, createSuccessResponse } from '../commons/responseHelpers';
+import { Types } from 'mongoose';
+import { IRegexSearch } from '../commons/interfaces';
+import { Utils } from '../utils/utils';
 
 /**
  * Creates a new school in the system
@@ -86,7 +89,7 @@ async function updateSchool(payload: any) {
 		throw createErrorResponse(MESSAGES.SCHOOL_NOT_FOUND, Constants.ERROR_TYPES.DATA_NOT_FOUND);
 	}
 
-	const updateToData: Record<string, string | number | number[]> = {};
+	const updateToData: Partial<ISchool> = {};
 
 	// Validate affiliatedSchoolBoard
 	if (payload.hasOwnProperty('affiliatedSchoolBoard') && String(payload.affiliatedSchoolBoard) !== String(existingSchool.affiliatedSchoolBoard)) {
@@ -156,14 +159,24 @@ async function updateSchool(payload: any) {
  * @throws {Object} Error response if schools retrieval fails
  */
 async function getSchools(payload: any) {
-	const matchCriteria: Record<string, boolean | Record<string, Record<string, string>>[]> = { isDeleted: false };
+	const matchCriteria: {
+		isDeleted: boolean;
+		_id?: Types.ObjectId;
+		$or?: {
+			name?: IRegexSearch;
+			email?: IRegexSearch;
+			contactNumber?: IRegexSearch;
+		}[];
+	} = {
+		isDeleted: false
+	};
 
 	if (payload.schoolId) {
 		matchCriteria._id = payload.schoolId;
 	}
 
 	if (payload.searchString) {
-		matchCriteria.$or = [ { name: { $regex: payload.searchString, $options: 'i' } }, { email: { $regex: payload.searchString, $options: 'i' } }, { contactNumber: { $regex: payload.searchString, $options: 'i' } } ];
+		matchCriteria.$or = [ { name: Utils.aggregateSearchRegex(payload.searchString) }, { email: Utils.aggregateSearchRegex(payload.searchString) }, { contactNumber: Utils.aggregateSearchRegex(payload.searchString) } ];
 	}
 
 	const schools = await dbService.aggregate(schoolModel, [

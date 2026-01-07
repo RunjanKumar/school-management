@@ -1,7 +1,20 @@
-import mongoose, { Schema } from 'mongoose';
-import { SchoolOwnerInterface } from '../interfaces';
+import mongoose, { Schema, Types, Document } from 'mongoose';
 
-const schoolOwnerSchema: Schema<SchoolOwnerInterface> = new Schema(
+export interface ISchoolOwner extends Document {
+	_id: Types.ObjectId;
+	createdAt: Date;
+	updatedAt: Date;
+	name: string;
+	email: string;
+	contactNumber: string;
+	alternateContactNumber?: string;
+	password: string;
+	hasSetPassword: boolean;
+	isEnabled: boolean;
+	isDeleted: boolean;
+}
+
+const schoolOwnerSchema: Schema<ISchoolOwner> = new Schema(
 	{
 		name: {
 			type: String,
@@ -44,4 +57,4 @@ const schoolOwnerSchema: Schema<SchoolOwnerInterface> = new Schema(
 	}
 );
 
-export default mongoose.model<SchoolOwnerInterface>('schoolOwners', schoolOwnerSchema);
+export default mongoose.model<ISchoolOwner>('schoolOwners', schoolOwnerSchema);

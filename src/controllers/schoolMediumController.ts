@@ -4,6 +4,8 @@ import { Constants } from '../commons/constants';
 import { schoolMediumModel, schoolModel } from '../models';
 import dbService from '../services/databaseService';
 import { Types } from 'mongoose';
+import { IRegexSearch } from '../commons/interfaces';
+import { Utils } from '../utils/utils';
 
 /**
  * Creates a new school medium
@@ -76,13 +78,19 @@ async function updateSchoolMedium(payload: any) {
  * @throws {Object} Error response if school mediums retrieval fails
  */
 async function getSchoolMediums(payload: any) {
-	const matchCriteria: Record<string, boolean | Types.ObjectId | { $regex: string; $options: string }> = { isDeleted: false };
+	const matchCriteria: {
+		isDeleted: boolean;
+		_id?: Types.ObjectId;
+		name?: IRegexSearch;
+	} = {
+		isDeleted: false
+	};
 
 	if (payload.schoolMediumId) {
 		matchCriteria._id = payload.schoolMediumId;
 	}
 	if (payload.searchString) {
-		matchCriteria.name = { $regex: payload.searchString, $options: 'i' };
+		matchCriteria.name = Utils.aggregateSearchRegex(payload.searchString);
 	}
 
 	const data = await dbService.aggregate(schoolMediumModel, [

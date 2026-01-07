@@ -1,8 +1,21 @@
-import mongoose, { Schema } from 'mongoose';
-import { UserRoleInterface } from '../interfaces';
+import mongoose, { Schema, Types, Document } from 'mongoose';
 import { Constants } from '../commons/constants';
 
-const UserRoleSchema: Schema<UserRoleInterface> = new Schema(
+export interface IUserRoleSchoolPermissions {
+	schoolId: Types.ObjectId;
+	permissions: (typeof Constants.USER_ROLE_PERMISSIONS)[keyof typeof Constants.USER_ROLE_PERMISSIONS][];
+}
+
+export interface IUserRole extends Document {
+	_id: Types.ObjectId;
+	name: string;
+	schoolPermissions: IUserRoleSchoolPermissions[];
+	isDeleted?: boolean;
+	createdAt?: Date;
+	updatedAt?: Date;
+}
+
+const UserRoleSchema: Schema<IUserRole> = new Schema(
 	{
 		name: {
 			type: String,
@@ -37,4 +50,4 @@ const UserRoleSchema: Schema<UserRoleInterface> = new Schema(
 	}
 );
 
-export default mongoose.model<UserRoleInterface>('userRoles', UserRoleSchema);
+export default mongoose.model<IUserRole>('userRoles', UserRoleSchema);

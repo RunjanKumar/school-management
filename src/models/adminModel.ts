@@ -1,7 +1,15 @@
-import mongoose, { Schema } from 'mongoose';
-import { AdminInterface } from '../interfaces';
+import mongoose, { Schema, Document } from 'mongoose';
 
-const adminSchema: Schema<AdminInterface> = new Schema(
+export interface IAdmin extends Document {
+	createdAt: Date;
+	updatedAt: Date;
+	name: string;
+	email: string;
+	password: string;
+	isDeleted: boolean;
+}
+
+const adminSchema: Schema<IAdmin> = new Schema(
 	{
 		name: { type: String, required: true },
 		email: { type: String, required: true },
@@ -15,4 +23,4 @@ const adminSchema: Schema<AdminInterface> = new Schema(
 	}
 );
 
-export default mongoose.model<AdminInterface>('admins', adminSchema);
+export default mongoose.model<IAdmin>('admins', adminSchema);

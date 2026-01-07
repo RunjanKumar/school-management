@@ -18,6 +18,14 @@ interface FilePayload {
 	size: number;
 }
 
+const s3Client = new S3Client({
+	region: CONFIG.S3_BUCKET.REGION,
+	credentials: {
+		accessKeyId: CONFIG.S3_BUCKET.ACCESS_KEY_ID,
+		secretAccessKey: CONFIG.S3_BUCKET.SECRET_ACCESS_KEY
+	}
+});
+
 /**
  * Upload file to local storage.
  */
@@ -76,33 +84,24 @@ export const uploadFile = async (payload: any): Promise<Record<string, string>> 
 	return await uploadFileToLocal(payload.file, fileName, filePath);
 };
 
-// AWS S3 Client Setup using v3 SDK
-// This replaces the AWS.config.update and direct AWS.S3 instantiation for the S3 bucket.
-const s3Client = new S3Client({
-	region: CONFIG.S3_BUCKET.region,
-	credentials: {
-		accessKeyId: CONFIG.S3_BUCKET.accessKeyId,
-		secretAccessKey: CONFIG.S3_BUCKET.secretAccessKey
-	}
-});
-
-console.log('AWS S3 Config (v3 Client Initialized for region):', CONFIG.S3_BUCKET.region);
-
+/**
+ * Uploads a file to S3.
+ * @param file - The file to upload.
+ * @param fileName - The name of the file.
+ * @returns The URL of the uploaded file.
+ */
 export const uploadFileToS3 = async (payload: FilePayload, fileName: string): Promise<string> => {
-	const bucketName = CONFIG.S3_BUCKET.bucketName;
-	console.log('Uploading file to S3 bucket:', bucketName, 'with file name:', payload);
+	const bucketName = CONFIG.S3_BUCKET.BUCKET_NAME;
+
 	const command = new PutObjectCommand({
 		Bucket: bucketName,
 		Key: fileName,
 		Body: payload.buffer,
 		ContentType: payload.mimetype
-		// ACL: 'public-read', // Uncomment if you need public-read access. Be cautious.
 	});
 
 	try {
-		const data = await s3Client.send(command); // Execute the command
-
-		console.log('S3 PutObjectCommand Success:', data);
+		await s3Client.send(command);
 
 		const cloudFrontBaseUrl = process.env.CLOUD_FRONT_URL;
 		let imageUrl: string;
@@ -113,12 +112,12 @@ export const uploadFileToS3 = async (payload: FilePayload, fileName: string): Pr
 			// Fallback to S3 object URL if CloudFront URL is not available
 			// Note: PutObjectCommand result does NOT directly return Location like v2 upload() or v3 lib-storage
 			// You have to construct it from the bucket name, region, and key.
-			imageUrl = `https://${bucketName}.s3.${CONFIG.S3_BUCKET.region}.amazonaws.com/${fileName}`;
+			imageUrl = `https://${bucketName}.s3.${CONFIG.S3_BUCKET.REGION}.amazonaws.com/${fileName}`;
 		}
 
 		return imageUrl;
 	} catch (err) {
 		console.error('S3 PutObjectCommand Error:', err);
-		throw err; // Re-throw the error for the calling function to handle
+		throw err;
 	}
 };

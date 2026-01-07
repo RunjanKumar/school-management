@@ -4,6 +4,8 @@ import { Constants } from '../commons/constants';
 import { schoolBoardModel, schoolModel } from '../models';
 import dbService from '../services/databaseService';
 import { Types } from 'mongoose';
+import { IRegexSearch } from '../commons/interfaces';
+import { Utils } from '../utils/utils';
 
 /**
  * Create a new school board
@@ -86,7 +88,12 @@ async function updateSchoolBoard(payload: any) {
  * @returns The list of school boards
  */
 async function getSchoolBoards(payload: any) {
-	const matchCriteria: Record<string, boolean | Types.ObjectId | { $regex: string; $options: string }> = {
+	const matchCriteria: {
+		isDeleted: boolean;
+		_id?: Types.ObjectId;
+		type?: number;
+		name?: IRegexSearch;
+	} = {
 		isDeleted: false
 	};
 
@@ -99,7 +106,7 @@ async function getSchoolBoards(payload: any) {
 	}
 
 	if (payload.searchString) {
-		matchCriteria.name = { $regex: payload.searchString, $options: 'i' };
+		matchCriteria.name = Utils.aggregateSearchRegex(payload.searchString);
 	}
 
 	const boards = await dbService.aggregate(schoolBoardModel, [

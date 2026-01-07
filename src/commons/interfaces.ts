@@ -1,3 +1,5 @@
+import { IAdmin, ISchoolOwner } from '../models';
+
 export interface DbConfig {
 	PROTOCOL: string;
 	HOST: string;
@@ -19,4 +21,17 @@ export interface UserUpdateData {
 export interface SignedToken {
 	sessionKey: string;
 	token: string;
+}
+
+export interface IAuthenticatedRequest extends Request {
+	admin?: IAdmin;
+	schoolOwner?: ISchoolOwner;
+	headers: {
+		authorization: string;
+	};
+}
+
+export interface IRegexSearch {
+	$regex: string;
+	$options: string;
 }

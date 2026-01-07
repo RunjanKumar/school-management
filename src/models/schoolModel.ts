@@ -1,8 +1,42 @@
-import mongoose, { Schema } from 'mongoose';
-import { SchoolInterface } from '../interfaces';
+import mongoose, { Schema, Types, Document } from 'mongoose';
 import { Constants } from '../commons/constants';
 
-const schoolSchema: Schema<SchoolInterface> = new Schema(
+export interface ISchool extends Document {
+	_id: Types.ObjectId;
+	createdAt: Date;
+	updatedAt: Date;
+	name: string;
+	shortName?: string;
+	logo?: string;
+	description?: string;
+	establishedYear?: number;
+	email: string;
+	contactNumber: string;
+	website?: string;
+	address: {
+		addressLine1: string;
+		addressLine2?: string;
+		landmark?: string;
+		city: string;
+		state: string;
+		zipcode: string;
+		country: string;
+		coordinates?: {
+			type: 'Point';
+			coordinates: [number, number];
+		};
+	};
+	affiliatedSchoolBoard: Types.ObjectId;
+	mediumOfInstruction: Types.ObjectId[];
+	schoolType: (typeof Constants.SCHOOL_TYPES)[keyof typeof Constants.SCHOOL_TYPES];
+	educationalLevels: Types.ObjectId[];
+	bannerImages?: string[];
+	schoolOwnerId: Types.ObjectId;
+	status: (typeof Constants.SCHOOL_STATUS)[keyof typeof Constants.SCHOOL_STATUS];
+	isDeleted: boolean;
+}
+
+const schoolSchema: Schema<ISchool> = new Schema(
 	{
 		// Basic Information
 		name: {
@@ -149,4 +183,4 @@ const schoolSchema: Schema<SchoolInterface> = new Schema(
 	}
 );
 
-export default mongoose.model<SchoolInterface>('schools', schoolSchema);
+export default mongoose.model<ISchool>('schools', schoolSchema);

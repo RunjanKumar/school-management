@@ -1,7 +1,13 @@
-import mongoose, { Schema } from 'mongoose';
-import { SchoolMediumInterface } from '../interfaces';
+import mongoose, { Schema, Document } from 'mongoose';
 
-const SchoolMediumSchema: Schema<SchoolMediumInterface> = new Schema(
+export interface ISchoolMedium extends Document {
+	name: string;
+	isDeleted?: boolean;
+	createdAt?: Date;
+	updatedAt?: Date;
+}
+
+const SchoolMediumSchema: Schema<ISchoolMedium> = new Schema(
 	{
 		name: {
 			type: String,
@@ -19,4 +25,4 @@ const SchoolMediumSchema: Schema<SchoolMediumInterface> = new Schema(
 	}
 );
 
-export default mongoose.model<SchoolMediumInterface>('schoolMediums', SchoolMediumSchema);
+export default mongoose.model<ISchoolMedium>('schoolMediums', SchoolMediumSchema);

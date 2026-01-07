@@ -4,6 +4,8 @@ import { Constants } from '../commons/constants';
 import { schoolEducationLevelModel, schoolModel } from '../models';
 import dbService from '../services/databaseService';
 import { Types } from 'mongoose';
+import { IRegexSearch } from '../commons/interfaces';
+import { Utils } from '../utils/utils';
 
 /**
  * Creates a new school education level
@@ -74,14 +76,20 @@ async function updateSchoolEducationLevel(payload: any) {
  * @throws {Object} Error response if retrieval fails
  */
 async function getSchoolEducationLevels(payload: any) {
-	const matchCriteria: Record<string, boolean | Types.ObjectId | { $regex: string; $options: string }> = { isDeleted: false };
+	const matchCriteria: {
+		isDeleted: boolean;
+		_id?: Types.ObjectId;
+		name?: IRegexSearch;
+	} = {
+		isDeleted: false
+	};
 
 	if (payload.schoolEducationLevelId) {
 		matchCriteria._id = payload.schoolEducationLevelId;
 	}
 
 	if (payload.searchString) {
-		matchCriteria.name = { $regex: payload.searchString, $options: 'i' };
+		matchCriteria.name = Utils.aggregateSearchRegex(payload.searchString);
 	}
 
 	const data = await dbService.aggregate(schoolEducationLevelModel, [

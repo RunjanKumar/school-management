@@ -12,10 +12,10 @@ type Config = {
 	PATH_TO_UPLOAD_FILES_ON_LOCAL_SERVER: string;
 	AWS: Record<string, string>;
 	S3_BUCKET: {
-		bucketName: string;
-		accessKeyId: string;
-		secretAccessKey: string;
-		region: string;
+		BUCKET_NAME: string;
+		ACCESS_KEY_ID: string;
+		SECRET_ACCESS_KEY: string;
+		REGION: string;
 	};
 	COMMUNICATION_EMAIL: string;
 };
@@ -69,10 +69,10 @@ const config: Config = {
 		SES_SECRET_KEY: process.env.AWS_SES_SECRET_KEY ?? ''
 	},
 	S3_BUCKET: {
-		bucketName: process.env.S3_BUCKET_NAME ?? 'school-management-bucket',
-		accessKeyId: process.env.S3_ACCESS_KEY_ID ?? '',
-		secretAccessKey: process.env.S3_SECRET_ACCESS ?? '',
-		region: process.env.S3_REGION ?? ''
+		BUCKET_NAME: process.env.S3_BUCKET_NAME ?? 'school-management-bucket',
+		ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID ?? '',
+		SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS ?? '',
+		REGION: process.env.S3_REGION ?? ''
 	},
 	CLIENT_EMAIL: process.env.CLIENT_EMAIL ?? '',
 	COMMUNICATION_EMAIL: process.env.COMMUNICATION_EMAIL ?? ''

@@ -1,7 +1,10 @@
-import mongoose, { Schema } from 'mongoose';
-import { DBVersionInterface } from '../interfaces';
+import mongoose, { Schema, Document } from 'mongoose';
 
-const DBVersionSchema: Schema<DBVersionInterface> = new Schema(
+export interface IDBVersion extends Document {
+	version: number;
+}
+
+const DBVersionSchema: Schema<IDBVersion> = new Schema(
 	{
 		version: { type: Schema.Types.Number }
 	},
@@ -12,4 +15,4 @@ const DBVersionSchema: Schema<DBVersionInterface> = new Schema(
 	}
 );
 
-export default mongoose.model<DBVersionInterface>('dbVersion', DBVersionSchema);
+export default mongoose.model<IDBVersion>('dbVersion', DBVersionSchema);

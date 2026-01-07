@@ -1,7 +1,19 @@
-import mongoose, { Schema } from 'mongoose';
-import { ClassSectionInterface } from '../interfaces';
+import mongoose, { Schema, Types, Document } from 'mongoose';
 
-const classSectionSchema: Schema<ClassSectionInterface> = new Schema(
+export interface IClassSection extends Document {
+	_id: Types.ObjectId;
+	name: string; // e.g., "A", "B", "Science", "Commerce"
+	classId: Types.ObjectId;
+	schoolId: Types.ObjectId;
+	sectionHeadTeacherId?: Types.ObjectId;
+	capacity: number;
+	currentStrength?: number;
+	isDeleted: boolean;
+	createdAt: Date;
+	updatedAt: Date;
+}
+
+const classSectionSchema: Schema<IClassSection> = new Schema(
 	{
 		name: {
 			type: String,
@@ -45,4 +57,4 @@ const classSectionSchema: Schema<ClassSectionInterface> = new Schema(
 	}
 );
 
-export const classSectionModel = mongoose.model<ClassSectionInterface>('classSections', classSectionSchema);
+export const classSectionModel = mongoose.model<IClassSection>('classSections', classSectionSchema);
