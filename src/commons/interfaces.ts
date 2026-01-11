@@ -26,8 +26,8 @@ export interface SignedToken {
 export interface IAuthenticatedRequest extends Request {
 	admin?: IAdmin;
 	schoolOwner?: ISchoolOwner;
-	headers: {
-		authorization: string;
+	headers: Request['headers'] & {
+		authorization?: string;
 	};
 }
 
