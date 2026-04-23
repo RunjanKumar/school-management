@@ -1,6 +1,7 @@
 type Config = {
 	PORT: number | string;
 	JWT_SECRET: string | undefined;
+	JWT_REFRESH_SECRET: string | undefined;
 	SMTP: any;
 	ADMIN_CRED: any;
 	DB: any;
@@ -18,10 +19,17 @@ type Config = {
 		REGION: string;
 	};
 	COMMUNICATION_EMAIL: string;
+	GOOGLE_OAUTH: {
+		CLIENT_ID: string;
+		CLIENT_SECRET: string;
+		CALLBACK_URL: string;
+	};
+	FRONTEND_URL: string;
 };
 
 const config: Config = {
 	JWT_SECRET: process.env.JWT_SECRET,
+	JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
 
 	PROTOCOL: process.env.SERVER_PROTOCOL ?? 'http',
 	HOST: process.env.SERVER_HOST ?? '0.0.0.0',
@@ -75,7 +83,13 @@ const config: Config = {
 		REGION: process.env.S3_REGION ?? ''
 	},
 	CLIENT_EMAIL: process.env.CLIENT_EMAIL ?? '',
-	COMMUNICATION_EMAIL: process.env.COMMUNICATION_EMAIL ?? ''
+	COMMUNICATION_EMAIL: process.env.COMMUNICATION_EMAIL ?? '',
+	GOOGLE_OAUTH: {
+		CLIENT_ID: process.env.GOOGLE_CLIENT_ID ?? '',
+		CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ?? '',
+		CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL ?? 'http://localhost:3000/v1/auth/google/callback'
+	},
+	FRONTEND_URL: process.env.FRONTEND_URL ?? 'http://localhost:5173'
 };
 
 export default config;

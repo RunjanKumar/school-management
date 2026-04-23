@@ -1,4 +1,4 @@
-import { IAdmin, ISchoolOwner } from '../models';
+import { IAdmin, ISchoolOwner, IUser } from '../models';
 
 export interface DbConfig {
 	PROTOCOL: string;
@@ -26,6 +26,7 @@ export interface SignedToken {
 export interface IAuthenticatedRequest extends Request {
 	admin?: IAdmin;
 	schoolOwner?: ISchoolOwner;
+	user?: IUser;
 	headers: Request['headers'] & {
 		authorization?: string;
 	};

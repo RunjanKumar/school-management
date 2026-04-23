@@ -23,6 +23,7 @@ async function loginAdmin(payload: any) {
 		isDeleted: false
 	});
 
+	console.log('admin', admin);
 	if (!admin) {
 		throw createErrorResponse(MESSAGES.ADMIN_NOT_FOUND, Constants.ERROR_TYPES.BAD_REQUEST);
 	}

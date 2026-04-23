@@ -26,6 +26,10 @@ authService.validateAuth = (auth: number, allowWithoutSetPassword: boolean = fal
 		return authService.schoolOwnerForgotPasswordValidate();
 	case Constants.AVAILABLE_AUTHS.ADMIN_AND_SCHOOL_OWNER:
 		return authService.adminAndSchoolOwnerValidate();
+	case Constants.AVAILABLE_AUTHS.USER:
+		return authService.userValidate();
+	case Constants.AVAILABLE_AUTHS.USER_FORGOT_PASSWORD:
+		return authService.userForgotPasswordValidate();
 	default:
 		return (request: IAuthenticatedRequest, response: Response, next: NextFunction) => {
 			next();
@@ -349,6 +353,125 @@ const validateAdminAndSchoolOwner = async (request: IAuthenticatedRequest) => {
 		request.schoolOwner = schoolOwner;
 		return true;
 	}
+};
+
+/**
+ * Validate user (access token)
+ * @param {IAuthenticatedRequest} request - Request object
+ * @returns {Promise<boolean>} - True if user is valid, false otherwise
+ */
+authService.userValidate = () => {
+	return (request: IAuthenticatedRequest, response: Response, next: NextFunction) => {
+		validateUser(request)
+			.then((result) => {
+				if (result) {
+					return next();
+				}
+
+				const responseObject = createErrorResponse(MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
+				return response.status(responseObject.statusCode).json(responseObject);
+			})
+			.catch(() => {
+				const responseObject = createErrorResponse(MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
+				return response.status(responseObject.statusCode).json(responseObject);
+			});
+	};
+};
+
+/**
+ * Validate user forgot password
+ * @param {IAuthenticatedRequest} request - Request object
+ * @returns {Promise<boolean>} - True if user is valid, false otherwise
+ */
+authService.userForgotPasswordValidate = () => {
+	return (request: IAuthenticatedRequest, response: Response, next: NextFunction) => {
+		validateUserForgotPassword(request)
+			.then((result) => {
+				if (result) {
+					return next();
+				}
+
+				const responseObject = createErrorResponse(MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
+				return response.status(responseObject.statusCode).json(responseObject);
+			})
+			.catch(() => {
+				const responseObject = createErrorResponse(MESSAGES.UNAUTHORIZED, Constants.ERROR_TYPES.UNAUTHORIZED);
+				return response.status(responseObject.statusCode).json(responseObject);
+			});
+	};
+};
+
+const validateUser = async (request: IAuthenticatedRequest) => {
+	const token = request.headers.authorization;
+
+	if (!token) {
+		return false;
+	}
+
+	let decoded: any;
+	try {
+		decoded = Utils.decryptJWTToken(token);
+	} catch {
+		return false;
+	}
+
+	if (!decoded) {
+		return false;
+	}
+
+	const user = await dbService.findOne(Models.userModel, {
+		_id: decoded.id,
+		isDeleted: false
+	});
+
+	if (!user) {
+		return false;
+	}
+
+	request.user = user;
+	return true;
+};
+
+const validateUserForgotPassword = async (request: IAuthenticatedRequest) => {
+	const token = request.headers.authorization;
+
+	if (!token) {
+		return false;
+	}
+
+	let decoded: any;
+	try {
+		decoded = Utils.decryptJWTToken(token);
+	} catch {
+		return false;
+	}
+
+	if (!decoded) {
+		return false;
+	}
+
+	const session = await dbService.findOne(Models.sessionModel, {
+		token: token,
+		refPath: Constants.SESSIONS_REF_PATH.USER,
+		type: Constants.SESSION.FORGOT_PASSWORD,
+		expirationTime: { $gt: new Date() }
+	});
+
+	if (!session) {
+		return false;
+	}
+
+	const user = await dbService.findOne(Models.userModel, {
+		_id: session.userId,
+		isDeleted: false
+	});
+
+	if (!user) {
+		return false;
+	}
+
+	request.user = user;
+	return true;
 };
 
 export default authService;

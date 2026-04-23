@@ -147,14 +147,13 @@ const defaultResponse: { [key: number]: SwaggerResponse } = {
 };
 
 const optimizeSwaggerResponse = (status: number, resp: SwaggerResponse | undefined): SwaggerResponse | undefined => {
-	const defaultStatus = [ 200, 401, 500 ];
+	const defaultStatus = [ 200, 201, 400, 401, 404, 500 ];
 
 	if (!resp) {
+		if (defaultStatus.includes(status)) {
+			return defaultResponse[status];
+		}
 		return;
-	}
-
-	if (defaultStatus.includes(status) && !resp) {
-		resp = defaultResponse[status];
 	}
 	if (resp) {
 		if (resp.schema) {

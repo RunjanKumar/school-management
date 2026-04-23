@@ -108,5 +108,17 @@ export const MESSAGES = {
 	FILE_UPLOAD_SUCCESS: 'File uploaded successfully.',
 	FILE_REQUIRED_IN_PAYLOAD: 'File is required in the payload.',
 	FILE_UPLOAD_FAILED: 'File upload failed.',
-	FILE_UPLOAD_ERROR: 'File upload error.'
+	FILE_UPLOAD_ERROR: 'File upload error.',
+
+	// auth related messages
+	SIGNUP_SUCCESSFUL: 'Account created successfully.',
+	USER_NOT_FOUND: 'User not found.',
+	EMAIL_ALREADY_REGISTERED: 'An account with this email already exists.',
+	INVALID_CREDENTIALS: 'Invalid email or password.',
+	INVALID_REFRESH_TOKEN: 'Invalid or expired refresh token.',
+	GOOGLE_AUTH_FAILED: 'Google authentication failed.',
+	PASSWORD_REQUIRED_FOR_LOCAL: 'Password is required for email signup.',
+	ACCOUNT_USES_GOOGLE: 'This account uses Google login. Please sign in with Google.',
+	TOKEN_REFRESHED: 'Token refreshed successfully.',
+	USER_PROFILE_FETCHED: 'User profile fetched successfully.'
 };

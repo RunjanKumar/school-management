@@ -26,6 +26,7 @@ export default {
 		ZENDESK_API_TOKEN: process.env.ZENDESK_API_TOKEN ?? 'api-token'
 	},
 	JWT_SECRET: process.env.JWT_SECRET,
+	JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
 	SMTP: {
 		TRANSPORT: {
 			host: process.env.SMTP_HOST ?? 'smtp-relay.brevo.com',
@@ -73,5 +74,11 @@ export default {
 		SES_ACCESS_ID: process.env.AWS_SES_ACCESS_ID ?? '',
 		SES_SECRET_KEY: process.env.AWS_SES_SECRET_KEY ?? ''
 	},
-	COMMUNICATION_EMAIL: process.env.COMMUNICATION_EMAIL ?? ''
+	COMMUNICATION_EMAIL: process.env.COMMUNICATION_EMAIL ?? '',
+	GOOGLE_OAUTH: {
+		CLIENT_ID: process.env.GOOGLE_CLIENT_ID ?? '',
+		CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ?? '',
+		CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL ?? 'http://localhost:3000/v1/auth/google/callback'
+	},
+	FRONTEND_URL: process.env.FRONTEND_URL ?? 'http://localhost:5173'
 };

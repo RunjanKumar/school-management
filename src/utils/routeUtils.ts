@@ -1,3 +1,4 @@
+import fs from 'fs';
 import Joi from 'joi';
 import path from 'path';
 import multer from 'multer';
@@ -216,7 +217,7 @@ const createSwaggerUIForRoutes = async (app: any, routes: any[] = []) => {
 
 		// Resolve path to Swagger JSON
 		const swaggerFilePath = path.resolve(__dirname, '../../swagger.json');
-		const swaggerDocument = await import(swaggerFilePath);
+		const swaggerDocument = JSON.parse(fs.readFileSync(swaggerFilePath, 'utf-8'));
 
 		// Serve Swagger UI with Basic Auth
 		app.use(

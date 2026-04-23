@@ -8,3 +8,4 @@ export { userRoleController } from './userRoleController';
 export { classController } from './classController';
 export { classSectionController } from './classSectionController';
 export { fileUploadController } from './fileUploadController';
+export { authController } from './authController';
